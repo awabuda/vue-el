@@ -30,6 +30,21 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+## 项目中增加的一些插件以及其他一些应用
+1. 数据的请求  安装了vue-resource 然后在项目里面直接this.$http.get...
+	[vueResource](https://github.com/pagekit/vue-resource)
+	[某博客](http://www.cnblogs.com/axl234/p/5899137.html)
+	
+	```
+		在main.js中
+			import vueResource from 'vue-resource'
+			Vue.use(vueResource)
+		然后在业务里面直接this.$http.get().then(success,error）
+		
+	```
+2. swiper 插件下面有说明 不做介绍
+3. vue-router 路由的组件
+
 ## 在项目中遇到的问题汇总
   * swiper组件的实现  有三种方法
 	  ```
@@ -61,7 +76,7 @@ npm run build --report
 	  <!-- 带查询参数，下面的结果为 /register?plan=private -->
 	  <router-link :to="{ path: 'register', query: { plan: 'private' }}">Register</router-link>
  	```
-* 与数据之间的交互引用插件   点击查看 ====》[vue-resource] (https://github.com/pagekit/vue-resource/blob/develop/docs/http.md) 
+
 * 在vue里面注入全局方法；module.exports  或者 export default写法已经不能满足；可以在js方法里写入以下内容  ：
 	```
 	export.install = function ( Vue, options){
