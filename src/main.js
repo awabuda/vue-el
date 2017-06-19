@@ -7,11 +7,10 @@ import VueResource from 'vue-resource'
 import store from './components/store/store'
 
 
-
+Vue.prototype.store = store;
 Vue.use(VueResource);
-Vue.use(store);// 在vue里面注入一些全局方法可以参考  store
 Vue.config.productionTip = false
-console.log(Vue.store)
+
 
 /* eslint-disable no-new */
 new Vue({

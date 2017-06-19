@@ -42,4 +42,5 @@ store.prototype = {
     }
   }
 }
-exports default = new store()
+
+export default new store();

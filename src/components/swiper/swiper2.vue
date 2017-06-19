@@ -12,7 +12,9 @@
 </template>
 <script>
 // 个人感觉这个方法不错
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { swiper, swiperSlide } from 'vue-awesome-swiper';
+
+
 export default {
   components:{
      swiper, swiperSlide
@@ -52,6 +54,7 @@ export default {
   },
   mounted () {// 编译模板、挂在之后。==》 不保证组件已在document中
     this.getBanner();
+  
   },
   beforeUpdate () {// 组件更新之前
     console.log(4 + '+')
