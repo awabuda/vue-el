@@ -39,6 +39,28 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
+/**
+ * mock start
+ */
+var bannerData = require ('../mockData/index/banner.json');
+var maindata = require ('../mockData/index/weixinmaindata.json');
+var api= express.Router();
+api.get('/banner',function (req,res) {
+  res.json({
+    errno:0,
+    data:bannerData
+  })
+});
+api.get('/maindata',function (req,res) {
+  res.json({
+    errno:0,
+    data:maindata
+  })
+});
+app.use('/api',api);
+//-------------- mock   end ------
+
+
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context]
@@ -78,6 +100,9 @@ devMiddleware.waitUntilValid(() => {
   }
   _resolve()
 })
+
+
+
 
 var server = app.listen(port)
 

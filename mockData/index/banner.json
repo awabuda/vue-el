@@ -1,0 +1,56 @@
+{
+  "errorCode": null,
+  "errorMessage": null,
+  "errorArgs": null,
+  "pager": null,
+  "pageID": null,
+  "orderFrom": null,
+  "advList": [
+    {
+      "adGroup": "微信新",
+      "adId": 52899,
+      "adName": "陪老爸走走",
+      "dimension": "1242*372",
+      "jumpLink": "//mp.elong.com/activity/activityid/data/a9551de3-af4f-4aeb-8d0a-8c0b17f40fd8?if=13095&ch=wxadbanner&ref=wxqbh5",
+      "picUrl": "//m.elongstatic.com/promotions/wireless/uploadImages/images149697756057352.jpg",
+      "sort": 1
+    },
+    {
+      "adGroup": "微信新",
+      "adId": 53120,
+      "adName": "清凉一夏",
+      "dimension": "1242*372",
+      "jumpLink": "//mp.elong.com/activity/activityid/data/2a52bec8-7bca-4d2a-ad39-d4dc25b8ca7a?if=13023&ch=wxadbanner&ref=wxqbh5",
+      "picUrl": "//m.elongstatic.com/promotions/wireless/uploadImages/images149740554575006.jpg",
+      "sort": 2
+    },
+    {
+      "adGroup": "微信新",
+      "adId": 52860,
+      "adName": "顺丰速运“轻松出行”",
+      "dimension": "1242*372",
+      "jumpLink": "http://sf-h5.weijuju.com/sf-activity/index02.jsp?ch=wxadbanner&ref=wxqbh5&if=13112",
+      "picUrl": "//m.elongstatic.com/promotions/wireless/uploadImages/images149689405077053.jpg",
+      "sort": 3
+    },
+    {
+      "adGroup": "微信新",
+      "adId": 52996,
+      "adName": "国际酒店 暑假来啦",
+      "dimension": "1242*372",
+      "jumpLink": "//promotion.elong.com/ihotel/H5/cam/summer_adds/index.html?isshow=1&ref=wxqbh5&pf=wx&if=13114&of=51467&ch=wxadbanner",
+      "picUrl": "//m.elongstatic.com/promotions/wireless/uploadImages/images149723309534508.jpg",
+      "sort": 4
+    },
+    {
+      "adGroup": "微信新",
+      "adId": 52780,
+      "adName": "邀好友赢现金",
+      "dimension": "1242*372",
+      "jumpLink": "//mp.elong.com/mobilepromotion/sven/index/?pid=3&tagid=7&origin=11&ch=wxadbanner&if=12473&ref=wxqbh5",
+      "picUrl": "//m.elongstatic.com/promotions/wireless/uploadImages/images149664908651156.jpg",
+      "sort": 6
+    }
+  ],
+  "error": false
+}

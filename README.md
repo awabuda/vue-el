@@ -1,3 +1,15 @@
+# 关于项目
+```
+-[Y] 本地demo主要应用了vue-cli 一个很强大工具
+		npm install -g vue-cli
+-[Y] 通过 vue-cli 去初始化创建一个项目比如  vue-elong
+		vue init webpack vue-elong  ===> 其中  webpack是可以利用的一个构建工具  可以通过    
+		vue-list 来查看 vue-elong 是你自己的项目名
+-[Y] 通过上面的创建步骤你可以接着执行如下代码
+		cd vue-elong // 进入项目目录
+		npm install  // 安装一些node 包工具
+		npm run dev  // 启服务
+```
 # vue-elong
 
 > a vue object about elong for myself
@@ -5,6 +17,7 @@
 ## Build Setup
 
 ``` bash
+
 # install dependencies
 npm install
 
@@ -48,6 +61,18 @@ npm run build --report
 	  <!-- 带查询参数，下面的结果为 /register?plan=private -->
 	  <router-link :to="{ path: 'register', query: { plan: 'private' }}">Register</router-link>
  	```
+* 与数据之间的交互引用插件   点击查看 ====》[vue-resource] (https://github.com/pagekit/vue-resource/blob/develop/docs/http.md) 
+* 在vue里面注入全局方法；module.exports  或者 export default写法已经不能满足；可以在js方法里写入以下内容  ：
+	```
+	export.install = function ( Vue, options){
+		Vue.prototype.store = new store()  // store为自己写的方法
+	}
+	然后在main.js中写入  :
+	import store from './store';
+	Vue.use(store)....
+	这样在业务代码中就可以直接使用 this.store  无需在每个业务里面单独引入；
+	```	
+ 	
 	
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

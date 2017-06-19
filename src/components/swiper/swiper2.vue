@@ -1,44 +1,45 @@
 <template>
   <div>
-    <swiper>
+    <swiper :options="swiperOption">
       <swiper-slide v-for="item in list" :key="item.id">
-        <img :src="item.pic" >
+        <img :src="item.picUrl" >
       </swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
+
+
   </div>
 </template>
 <script>
 // 个人感觉这个方法不错
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-
+//import store from '../../components/store/store'
+var store = require('../../components/store/store');
 export default {
   components:{
      swiper, swiperSlide
   },
   data () {
     return {
-        list:[{
-            pic:"//m.elongstatic.com/promotions/wireless/uploadImages/images149697756057352.jpg"
-          },
-          {
-            pic:"//m.elongstatic.com/promotions/wireless/uploadImages/images149740554575006.jpg"
-          },
-          {
-            pic:"//m.elongstatic.com/promotions/wireless/uploadImages/images149689405077053.jpg"
-          },
-          {
-            pic:"//m.elongstatic.com/promotions/wireless/uploadImages/images149723309534508.jpg"
-          },
-          {
-            pic:"//m.elongstatic.com/promotions/wireless/uploadImages/images149664908651156.jpg"
-          }
-        ],
-        swiper:null
+        list: [],
+        swiper:null,
+        swiperOption: {
+          autoplay: 2000,
+          pagination:".swiper-pagination",
+          loop: true
+        }
     }
   },
   methods: { //虚拟dom中绑定的方法
     getBanner () {
-
+      this.$http.get('/api/banner').then(function (res) {
+        console.log(res)
+        if ( !!res.body.data.advList ) {
+          this.list = res.body.data.advList;
+        }
+      },function () {
+        console.log('请求失败')
+      })
     }
   }
   ,
@@ -52,13 +53,7 @@ export default {
     console.log(3)
   },
   mounted () {// 编译模板、挂在之后。==》 不保证组件已在document中
-    // this.swiper = new Swiper('.myswiper',{
-    //     autoplay: 3000,
-    //     pagination: '.swiper-pagination',
-    //     paginationClickable: true,
-    //     loop: true
-    //   });
-    // console.log(4)
+    this.getBanner();
   },
   beforeUpdate () {// 组件更新之前
     console.log(4 + '+')
@@ -81,9 +76,3 @@ export default {
 }
 
 </script>
-<style media="screen">
-  img{
-    width: 100%;
-    height:auto;
-  }
-</style>

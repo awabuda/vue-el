@@ -9,6 +9,7 @@
 
 /* reset */
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button {margin:0;padding:0}  /* 初始化标签在所有浏览器中的margin、padding值 */
+input,textarea,select{border:0;outline: none}
 fieldset,img {border:0 none}  /* 重置fieldset（表单分组）、图片的边框为0*/
 dl,ul,ol,menu,li {list-style:none}   /* 重置类表前导符号为onne,menu在HTML5中有效 */
 blockquote, q {quotes: none}   /* 重置嵌套引用的引号类型 */

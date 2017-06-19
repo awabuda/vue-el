@@ -1,0 +1,44 @@
+
+{
+  "errorCode": null,
+  "errorMessage": null,
+  "errorArgs": null,
+  "pager": null,
+  "pageID": null,
+  "orderFrom": "1000000",
+  "city": {
+    "cityName": "北京市",
+    "cityId": "0101",
+    "pinYin": "beijingshi",
+    "jianPin": "bjs",
+    "cityNameSEO": "beijing"
+  },
+  "cityNameSize": 3,
+  "indate": "2017-06-16",
+  "outdate": "2017-06-17",
+  "showIndate": "06月16日",
+  "showOutdate": "06月17日",
+  "showIndateOfWeek": "今天",
+  "showOutdateOfWeek": "明天",
+  "stayTime": 1,
+  "searchList": "[]",
+  "hotCityList": "[{\"cityId\":\"0101\",\"cityName\":\"北京\",\"cityNameSEO\":\"beijing\",\"jianPin\":\"bj\",\"pinYin\":\"beijing\"},{\"cityId\":\"0201\",\"cityName\":\"上海\",\"cityNameSEO\":\"shanghai\",\"jianPin\":\"sh\",\"pinYin\":\"shanghai\"},{\"cityId\":\"2001\",\"cityName\":\"广州\",\"cityNameSEO\":\"guangzhou\",\"jianPin\":\"gz\",\"pinYin\":\"guangzhou\"},{\"cityId\":\"1201\",\"cityName\":\"杭州\",\"cityNameSEO\":\"hangzhou\",\"jianPin\":\"hz\",\"pinYin\":\"hangzhou\"},{\"cityId\":\"2003\",\"cityName\":\"深圳\",\"cityNameSEO\":\"shenzhen\",\"jianPin\":\"sz\",\"pinYin\":\"shenzhen\"},{\"cityId\":\"1801\",\"cityName\":\"武汉\",\"cityNameSEO\":\"wuhan\",\"jianPin\":\"wh\",\"pinYin\":\"wuhan\"},{\"cityId\":\"2301\",\"cityName\":\"成都\",\"cityNameSEO\":\"chengdu\",\"jianPin\":\"cd\",\"pinYin\":\"chengdu\"},{\"cityId\":\"2701\",\"cityName\":\"西安\",\"cityNameSEO\":\"xian\",\"jianPin\":\"xa\",\"pinYin\":\"xian\"},{\"cityId\":\"1101\",\"cityName\":\"南京\",\"cityNameSEO\":\"nanjing\",\"jianPin\":\"nj\",\"pinYin\":\"nanjing\"},{\"cityId\":\"0401\",\"cityName\":\"重庆\",\"cityNameSEO\":\"chongqing\",\"jianPin\":\"cq\",\"pinYin\":\"chongqing\"},{\"cityId\":\"1901\",\"cityName\":\"长沙\",\"cityNameSEO\":\"changsha\",\"jianPin\":\"cs\",\"pinYin\":\"changsha\"},{\"cityId\":\"1401\",\"cityName\":\"厦门\",\"cityNameSEO\":\"xiamen\",\"jianPin\":\"xm\",\"pinYin\":\"xiamen\"},{\"cityId\":\"0301\",\"cityName\":\"天津\",\"cityNameSEO\":\"tianjin\",\"jianPin\":\"tj\",\"pinYin\":\"tianjin\"},{\"cityId\":\"3201\",\"cityName\":\"香港\",\"cityNameSEO\":\"hongkong\",\"jianPin\":\"xg\",\"pinYin\":\"xianggang\"},{\"cityId\":\"1001\",\"cityName\":\"哈尔滨\",\"cityNameSEO\":\"harbin\",\"jianPin\":\"heb\",\"pinYin\":\"haerbin\"},{\"cityId\":\"1701\",\"cityName\":\"郑州\",\"cityNameSEO\":\"zhengzhou\",\"jianPin\":\"zz\",\"pinYin\":\"zhengzhou\"},{\"cityId\":\"1102\",\"cityName\":\"苏州\",\"cityNameSEO\":\"soochow\",\"jianPin\":\"sz\",\"pinYin\":\"suzhou\"},{\"cityId\":\"1301\",\"cityName\":\"合肥\",\"cityNameSEO\":\"hefei\",\"jianPin\":\"hf\",\"pinYin\":\"hefei\"},{\"cityId\":\"1602\",\"cityName\":\"济南\",\"cityNameSEO\":\"jinan\",\"jianPin\":\"jn\",\"pinYin\":\"jinan\"},{\"cityId\":\"2201\",\"cityName\":\"三亚\",\"cityNameSEO\":\"sanya\",\"jianPin\":\"sy\",\"pinYin\":\"sanya\"}]",
+  "starList": "[{\"key\":-1,\"value\":-1},{\"key\":12,\"value\":12},{\"key\":3,\"value\":3},{\"key\":4,\"value\":4},{\"key\":5,\"value\":5}]",
+  "deepNightFlag": 0,
+  "hotelOrderListUrl": null,
+  "today": "2017-06-16",
+  "yesterday": "2017-06-15",
+  "tomorrow": "2017-06-17",
+  "customization": null,
+  "loginInfo": "{\"loginUrl\":\"\",\"errorCode\":\"\"}",
+  "urls": {
+    "wxqbindex": "//m.elong.com/hotelwxqb/index/",
+    "ctrip_webapp": "https://wetrip.elong.com/webapp/"
+  },
+  "subPath": "/hotelwxqb/",
+  "cardNo": "190000000049381181",
+  "hongbaoCount": 0,
+  "zkCalendarLimitNum": 30,
+  "outerFrom": null,
+  "error": false
+}
