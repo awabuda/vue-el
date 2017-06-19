@@ -13,8 +13,6 @@
 <script>
 // 个人感觉这个方法不错
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-//import store from '../../components/store/store'
-var store = require('../../components/store/store');
 export default {
   components:{
      swiper, swiperSlide

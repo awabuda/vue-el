@@ -42,8 +42,4 @@ store.prototype = {
     }
   }
 }
-
-//module.exports = new store();
-exports.install = function (Vue ,options) {
-  Vue.prototype.store = new store()
-}
+exports default = new store()
