@@ -4,13 +4,18 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
-import store from './components/store/store'
+//import store from './components/store/store'
 
 
-Vue.prototype.store = store;
+//Vue.prototype.store = store;
 Vue.use(VueResource);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
+
+router.beforeEach(({meta, path}, from, next) =>{ //路由的钩子函数
+
+  next(); // 这里必须执行；
+})
 
 /* eslint-disable no-new */
 new Vue({

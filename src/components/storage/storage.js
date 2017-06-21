@@ -13,7 +13,7 @@ store.prototype = {
 
   },
   getLocal: function (a) {
-    return JSON.parse( localStorage.getItem(a) || {} ) || {};
+    return JSON.parse( localStorage.getItem(a) || "{}" ) || {};
   },
   setSess: function (a , b) {
       if ( window.sessionStorage ) {
@@ -21,7 +21,7 @@ store.prototype = {
       }
   },
   getSessin: function  (a) {
-    return sessionStorage.getItem(a) || {};
+    return JSON.parse( sessionStorage.getItem(a) || "{}") || {};
   },
   setCookie: function  (name,value,ms){
     var expires = "";

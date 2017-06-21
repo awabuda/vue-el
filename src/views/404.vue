@@ -1,6 +1,6 @@
 <template >
-    <div id="index">
-      {{msg}}
+    <div id="nofind">
+      <img src="../assets/img/404.jpeg">
     </div>
 </template>
 
@@ -14,3 +14,24 @@ export  default {
   }
 }
 </script>
+<style media="screen" lang='scss'>
+  #nofind{
+    width: 100%;
+    height:100%;
+    overflow: hidden;
+    background-color: #F2F2F2;
+
+  }
+  img {
+    display: block;
+    width: 100%;
+    height:auto;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+  }
+</style>

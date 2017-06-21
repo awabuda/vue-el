@@ -1,4 +1,124 @@
+<template >
+    <div id="index">
+      <my-swiper :bannerdata='bannerpic' :swiperoption = 'swiperOption'></my-swiper>
+      <div class="main">
+        <ul>
+          <li class="city">
+            <p class="cityname">北京市</p>
+            <span>
+              <i></i>
+              我的位置
+            </span>
+          </li>
+          <li class='date'>
+            <dl class="in">
+              <dt> 入住</dt>
+              <dd data-value="" class="d1">{{indate}}</dd>
+              <dd class="d2"> 今天 </dd>
+            </dl>
+            <div class="total"><span><em>1</em>晚</span></div>
+            <dl class="out " >
+              <dt> 离店</dt>
+              <dd data-value="" class="d1">{{outdate}}</dd>
+              <dd class="d2"> 明天</dd>
+            </dl>
+          </li>
+          <li class='keywords'>
+            <p>
+              <label for=""></label>
+              <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off">
+            </p>
+          </li>
+          <li>
+            <p>
+              <label for=""></label>
+              <input type="text" name="" value="" placeholder="价格、星级" autocomplete="off">
+            </p>
+          </li>
+        </ul>
+        <router-link :to="{path:'/list',name:'list',params:{userId:123}}" class="search_btn" tag='div'>
+           查找酒店
+        </router-link>
+      </div>
+      <globalCity v-show="globalcity"></globalCity>
+    </div>
+
+</template>
+
+<script >
+import storage from '../components/storage/storage'
+import globalCity from '../components/globalCity'
+export  default {
+  data() {
+    return {
+      indate: (new Date().getMonth()+1) +'月'+new Date().getDate() + '日',
+      outdate: (new Date().getMonth()+1) +'月'+ (new Date().getDate()+2) +'日',
+      bannerpic: JSON.parse(storage.getLocal('banner') || '') || [],
+      swiperOption: {
+        autoplay: 2000,
+        pagination:".swiper-pagination",
+        loop: true
+      },
+      globalcity: false
+    }
+  },
+  components:{
+    mySwiper: require('../components/swiper/swiper2.vue'),
+    globalCity
+  },
+  methods: { //虚拟dom中绑定的方法
+    getBanner() {
+      this.$http.get('/api/banner').then(function (res) {
+        if ( !!res.body.data.advList ) {
+          if (storage.getLocal('banner') == JSON.stringify(res.body.data.advList)){
+            console.log('....banner from cache')
+          } else {
+            this.bannerpic  = res.body.data.advList; // 给轮播加banner图
+            storage.setLocal('banner',JSON.stringify(this.bannerpic))
+          }
+        }
+      },function (res) {
+        console.log('请求失败?indate=2017-06-20&outdate=0&_rt=1497959633453&cityid=0101')
+      })
+    },
+    getGlobalCity() {
+      var _this = this;
+      this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/').then(function(res) {
+          console.log(res)
+      },function() {
+        console.log("fafafa")
+      })
+    }
+  },
+  beforeCreate () {// 组件实例刚被创建；组件属性计算之间入data el属性等
+  },
+  created () {// 组件实例已经创建完成，属性已绑定，但Dom还未生成，el 属性还不存在
+   this.getBanner();
+   this.getGlobalCity();
+
+  },
+  beforeMount () {// 编译模板/挂在之前
+  },
+  mounted () {// 编译模板、挂在之后。==》 不保证组件已在document中
+  },
+  beforeUpdate () {// 组件更新之前
+  },
+  updated () {// 组件更新之后
+  },
+  activated () {// for keep-active 组件激活之时调用
+  },
+  deactivated () {// for keep-active 组件激活之后
+  },
+  beforeDestory () {// 组件销毁之前调用
+  },
+  destory () {// 组件销毁后调用
+  }
+}
+</script>
 <style media="screen" lang='scss'>
+#index{
+  height:100%;
+}
   img{
     width: 100%;
     height:auto;
@@ -231,109 +351,3 @@
       }
     }
 </style>
-
-<template >
-    <div id="index">
-      <myswiper ></myswiper>
-      <div class="main">
-        <ul>
-          <li class="city">
-            <p class="cityname">北京市</p>
-            <span>
-              <i></i>
-              我的位置
-            </span>
-          </li>
-          <li class='date'>
-            <dl class="in">
-              <dt> 入住</dt>
-              <dd data-value="" class="d1">6月6日</dd>
-              <dd class="d2"> 今天 </dd>
-            </dl>
-            <div class="total"><span><em>1</em>晚</span></div>
-            <dl class="out " >
-              <dt> 离店</dt>
-              <dd data-value="" class="d1">6月7日</dd>
-              <dd class="d2"> 明天</dd>
-            </dl>
-          </li>
-          <li class='keywords'>
-            <p>
-              <label for=""></label>
-              <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off">
-            </p>
-          </li>
-          <li>
-            <p>
-              <label for=""></label>
-              <input type="text" name="" value="" placeholder="价格、星级" autocomplete="off">
-            </p>
-          </li>
-        </ul>
-        <router-link :to="{path:'/list',name:'list',params:{userId:123}}" class="search_btn" tag='div'>
-           查找酒店
-        </router-link>
-      </div>
-      <ul class="prolist first s_bdb">
-        <li><a href="#" class="isnearby tjclick" ><i class="near isnearby"></i>附近酒店</a></li>
-        <li class="s_bdl"><a href="#" class="cheap_hotels tjclick" ><i class="sale"></i>特惠酒店</a></li>
-        <li class="s_bdl"><a class="tjclick elongticket"  href="#"><i class="ticket"></i>门票</a></li>
-        <li class="s_bdl"><a href="#" class="clock-hotel tjclick" ><i class="clock"></i>钟点房</a></li>
-      </ul>
-      <ul class="prolist second">
-        <li class="tjclick" ><a href="https://msecure.elong.com/authorize/ctriplogin/?backUrl=https%3A%2F%2Fwetrip.elong.com%2Fwebapp%2Ftours%2Felong%2Findex%3Fallianceid%3D106206%26sid%3D550008%26popup%3Dclose%26from%3Dhttps%253A%252F%252Fx.elong.com%252Fhotelwxqb%252Findex%252F%26ouid%3D190000000049381181%26latitude%3D31.228425%26longitude%3D121.478133"><i class="team"></i>跟团游</a></li>
-        <li class="tjclick s_bdl" ><a href="https://msecure.elong.com/authorize/ctriplogin/?backUrl=https%3A%2F%2Fwetrip.elong.com%2Fwebapp%2Ftours%2Fdiyelong%2Findex%3Fallianceid%3D106206%26sid%3D550008%26popup%3Dclose%26from%3Dhttps%253A%252F%252Fx.elong.com%252Fhotelwxqb%252Findex%252F%26ouid%3D190000000049381181%26latitude%3D31.228425%26longitude%3D121.478133"><i class="free"></i>自由行</a></li>
-        <li class="tjclick s_bdl" ><a class="localtour" href="#"><i class="localtr"></i>当地游</a></li>
-       <li class="tjclick s_bdl" ><a href="https://msecure.elong.com/authorize/ctriplogin?backUrl=https%3A%2F%2Fwetrip.elong.com%2Fwebapp%2Fvacations%2Felongguider%2Fhomepage%3Fallianceid%3D106206%26sid%3D550008%26popup%3Dclose%26from%3Dhttps%253A%252F%252Fx.elong.com%252Fhotelwxqb%252Findex%252F%26ouid%3D190000000049381181%26latitude%3D31.228425%26longitude%3D121.478133"><i class="guide"></i>当地向导</a></li>
-    </ul>
-    </div>
-
-</template>
-
-<script >
-
-export  default {
-  data() {
-    return {
-      msg:"欢迎来到我的首页",
-    }
-  },
-  components:{
-    Myswiper: require('../components/swiper/swiper2.vue')
-  },
-  methods: { //虚拟dom中绑定的方法
-
-  },
-  beforeCreate () {// 组件实例刚被创建；组件属性计算之间入data el属性等
-    console.log(1)
-  },
-  created () {// 组件实例已经创建完成，属性已绑定，但Dom还未生成，el 属性还不存在
-    console.log(2)
-    console.log(this.store)
-
-  },
-  beforeMount () {// 编译模板/挂在之前
-    console.log(3)
-  },
-  mounted () {// 编译模板、挂在之后。==》 不保证组件已在document中
-  },
-  beforeUpdate () {// 组件更新之前
-    console.log(4 + '+')
-  },
-  updated () {// 组件更新之后
-    console.log(5)
-  },
-  activated () {// for keep-active 组件激活之时调用
-    console.log(6)
-  },
-  deactivated () {// for keep-active 组件激活之后
-    console.log(7)
-  },
-  beforeDestory () {// 组件销毁之前调用
-    console.log(8)
-  },
-  destory () {// 组件销毁后调用
-    console.log(9)
-  }
-}
-</script>

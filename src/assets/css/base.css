@@ -48,4 +48,6 @@ a:active {star:expression(this.onFocus=this.blur());}
 /*移动端body,html宽高100%*/
 body,html {
   width:100%;
+  height:100%;
+  overflow: hidden;
 }
