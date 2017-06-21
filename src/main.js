@@ -20,6 +20,7 @@ router.beforeEach(({meta, path}, from, next) =>{ //路由的钩子函数
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  mode:'history',
   router,
   template: '<App/>',
   components: { App }

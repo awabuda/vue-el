@@ -18,7 +18,7 @@ export  default {
   },
   methods:{
     fetch () {
-      this.msg = this.$route.params.userId
+      this.msg = this.$route.params.userId || this.msg
     }
   }
 

@@ -1,6 +1,7 @@
 <template >
     <div id="nofind">
       <img src="../assets/img/404.jpeg">
+      <p>{{msg}}</p>
     </div>
 </template>
 
@@ -9,7 +10,7 @@
 export  default {
   data() {
     return {
-      msg:"页面未找到"
+      msg:"可能是小主尿急啦 。。。o(╯□╰)o"
     }
   }
 }
@@ -33,5 +34,11 @@ export  default {
     -webkit-transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
     -moz-transform: translate(-50%,-50%);
+  }
+  p{
+    text-align: center;
+    font-size: 21px;
+    color: #FFD306	;
+    margin-top: 40%;
   }
 </style>
