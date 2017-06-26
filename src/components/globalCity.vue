@@ -1,18 +1,18 @@
 <template >
-  <div class='global_city'>
+  <div class='global_city' v-show='globalcity'>
     <div class="current">
       <div class="page-title">附近</div>
       <div class="city-list ">
         <span>我的附近</span>
       </div>
     </div>
-    <div class="search-history" >
+    <div class="search-history" v-show="hisShow">
       <div class="page-title">搜索历史</div>
       <div class="search-clearhistory" >清除历史</div>
       <div class="city-list" >
         <ul>
-            <li city-id="0201" area-type="" area-id="" sug-origin="" class="on">
-              <span>上海</span>
+            <li v-for="his in historyCity" :city-id="his.cityId" :area-type="his.areaType" :area-id="his.areaId" sug-origin="" class="on">
+              <span>{{his.cityName}}</span>
             </li>
         </ul>
       </div>
@@ -21,96 +21,21 @@
       <div class="page-title">热门城市</div>
       <div class="city-list">
         <ul>
-          <li city-id="0101" area-type="" area-id="" sug-origin="" class="">
-            <span>北京</span>
-          </li>
-          <li city-id="0201" area-type="" area-id="" sug-origin="" class="on">
-            <span>上海</span>
-          </li>
-          <li city-id="2001" area-type="" area-id="" sug-origin="" class="">
-            <span>广州</span>
-          </li><li city-id="1201" area-type="" area-id="" sug-origin="" class="">
-            <span>杭州</span>
-          </li>
-          <li city-id="2003" area-type="" area-id="" sug-origin="" class="">
-            <span>深圳</span>
-          </li>
-          <li city-id="1801" area-type="" area-id="" sug-origin="" class="">
-            <span>武汉</span>
-          </li>
-          <li city-id="2301" area-type="" area-id="" sug-origin="" class="">
-            <span>成都</span>
-          </li>
-          <li city-id="2701" area-type="" area-id="" sug-origin="" class="">
-            <span>西安</span>
-          </li>
-          <li city-id="1101" area-type="" area-id="" sug-origin="" class="">
-            <span>南京</span>
-          </li>
-          <li city-id="0401" area-type="" area-id="" sug-origin="" class="">
-            <span>重庆</span>
-          </li>
-          <li city-id="1901" area-type="" area-id="" sug-origin="" class="">
-            <span>长沙</span>
-          </li>
-          <li city-id="1401" area-type="" area-id="" sug-origin="" class="">
-            <span>厦门</span>
-          </li>
-          <li city-id="0301" area-type="" area-id="" sug-origin="" class="">
-            <span>天津</span>
-          </li>
-          <li city-id="3201" area-type="" area-id="" sug-origin="" class="">
-            <span>香港</span>
-          </li>
-          <li city-id="1001" area-type="" area-id="" sug-origin="" class="">
-            <span>哈尔滨</span>
-          </li>
+          <li v-for="item in citydata" :city-id="item.cityId"  :area-type="item.areaType" :area-id="item.areaId" :sug-origin="item.sugOrigin" class=""      @click="citySelect(item)"><span>{{item.cityName}}</span></li>
         </ul>
       </div>
     </div>
     <div class="all-city" >
       <div class="lc-city-lst">
         <ul>
-          <li class="">
+          <li class="" v-for='all in allCity' @click="allCitySelect(all)">
             <div class="lc-letter-tit">
-              <span> A <i class="active"></i>
+              <span> {{all.letter}}<i  v-bind:class="{active:!all.checked}"></i>
               </span>
             </div>
-            <div class="lc-show-hide">
-              <span city-id="1988" area-type="" area-id="">安仁县</span>
-              <span city-id="2537" area-type="" area-id="">安宁市</span>
-              <span city-id="3301" area-type="" area-id="">澳门</span>
-              <span city-id="1653" area-type="" area-id="">安丘市</span>
-              <span city-id="3126" area-type="" area-id="">阿合奇县</span>
-              <span city-id="0585" area-type="" area-id="">安新县</span>
-            </div>
-          </li>
-          <li class="">
-            <div class="lc-letter-tit">
-              <span> A <i class="active"></i>
-              </span>
-            </div>
-            <div class="lc-show-hide">
-              <span city-id="1988" area-type="" area-id="">安仁县</span>
-              <span city-id="2537" area-type="" area-id="">安宁市</span>
-              <span city-id="3301" area-type="" area-id="">澳门</span>
-              <span city-id="1653" area-type="" area-id="">安丘市</span>
-              <span city-id="3126" area-type="" area-id="">阿合奇县</span>
-              <span city-id="0585" area-type="" area-id="">安新县</span>
-            </div>
-          </li>
-          <li class="">
-            <div class="lc-letter-tit">
-              <span> B <i class="active"></i>
-              </span>
-            </div>
-            <div class="lc-show-hide">
-              <span city-id="1988" area-type="" area-id="">安仁县</span>
-              <span city-id="2537" area-type="" area-id="">安宁市</span>
-              <span city-id="3301" area-type="" area-id="">澳门</span>
-              <span city-id="1653" area-type="" area-id="">安丘市</span>
-              <span city-id="3126" area-type="" area-id="">阿合奇县</span>
-              <span city-id="0585" area-type="" area-id="">安新县</span>
+            <div class="lc-show-hide" v-show='all.checked'>
+               <span v-for='item in allCityData' :city-id="item.cityId" :area-type="item.areaType" :area-id="item.areaId">{{item.cityName}}</span>
+
             </div>
           </li>
         </ul>
@@ -123,14 +48,59 @@
 import storage from './storage/storage'
 
 export default  {
-  props:['citydata'],
-  data (){
+  props:['citydata','globalcity'],
+  data () {
       return {
-        selectCity: storage.getLocal("selectcity")||""
-      }
-  }
-}
+        allCity:[{letter:"A",checked:false},{letter:"B",checked:false},{letter:"C",checked:false},{letter:"D",checked:false},{letter:"E",checked:false},{letter:"F",checked:false},{letter:"G",checked:false},{letter:"H",checked:false},{letter:"I",checked:false},{letter:"J",checked:false},{letter:"K",checked:false},{letter:"L",checked:false},{letter:"M",checked:false},{letter:"N",checked:false},{letter:"O",checked:false},{letter:"P",checked:false},{letter:"Q",checked:false},{letter:"R",checked:false},{letter:"S",checked:false},{letter:"T",checked:false},{letter:"U",checked:false},{letter:"V",checked:false},{letter:"W",checked:false},{letter:"X",checked:false},{letter:"Y",checked:false},{letter:"Z",checked:false}],
+        historyCity: JSON.parse(storage.getLocal("historyCity")||'[]'),
+        hisShow:!!storage.getLocal("historyCity") ?  true: false,
+        allCityData:[],
+        selectLetter:""
 
+      }
+  },
+  mounted () {
+    //this.getGlobalCity();
+    //console.log(1)
+  },
+  methods: {
+    citySelect: function(e) {
+      var star = JSON.parse(storage.getLocal('historyCity')|| '[]');
+      for (var i=0;i<star.length;i++){
+        if( star[i].cityId == e.cityId ){
+          star.splice(i)
+        }
+      }
+      star.unshift(e);
+      storage.setLocal('historyCity',star)
+      this.hideModule();
+    },
+    hideModule: function () {
+
+      this.globalCity = false;
+      console.log(this.globalCity)
+
+    }
+    ,
+    allCitySelect: function (all) {
+        this.allCityData = [];
+        this.$http.get('https://m.elong.com/hotelwxqb/api/gethotelcitysbyletter/',{
+          params:{ letter:all.letter,_rt: new Date().getTime()}
+        }).then(function (res) {
+          for ( var i= 0;i < this.allCity.length ;i++ ){
+            if (this.allCity[i].letter == all.letter){
+                this.allCity[i].checked = !this.allCity[i].checked;
+            } else {
+              this.allCity[i].checked = false;
+            }
+          }
+          this.allCityData = res.body;
+        },function () {
+          console.log('请求失败')
+        })
+      }
+    }
+  }
 </script>
 
 
@@ -193,7 +163,7 @@ export default  {
 
           width: 30%;
           border-radius: 3px;
-          margin-right: 5%;
+          margin-right: 3.33%;
           margin-bottom: 12px;
           background: #FFF;
           height: 40px;
@@ -316,7 +286,6 @@ export default  {
             background: #fff;
             padding: 0 12px;
             overflow: hidden;
-            display: none;
             span{
               display: inline-block;
               height: 44px;

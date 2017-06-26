@@ -16,7 +16,7 @@ router.beforeEach(({meta, path}, from, next) =>{ //路由的钩子函数
 
   next(); // 这里必须执行；
 })
-
+window.Vue = Vue;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

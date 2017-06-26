@@ -4,7 +4,7 @@
       <div class="main">
         <ul>
           <li class="city">
-            <p class="cityname">北京市</p>
+            <p class="cityname" @click='globalcity=!globalcity'>北京市</p>
             <span>
               <i></i>
               我的位置
@@ -40,7 +40,7 @@
            查找酒店
         </router-link>
       </div>
-      <globalCity v-show="globalcity"></globalCity>
+      <globalCity v-show="globalcity" :citydata='citydata' :globalcity='globalcity'></globalCity>
     </div>
 
 </template>
@@ -53,13 +53,14 @@ export  default {
     return {
       indate: (new Date().getMonth()+1) +'月'+new Date().getDate() + '日',
       outdate: (new Date().getMonth()+1) +'月'+ (new Date().getDate()+2) +'日',
-      bannerpic: JSON.parse(storage.getLocal('banner') || '') || [],
+      bannerpic: JSON.parse(storage.getLocal('banner') || '[]'),
       swiperOption: {
         autoplay: 2000,
         pagination:".swiper-pagination",
         loop: true
       },
-      globalcity: false
+      globalcity: false,
+      citydata:[],
     }
   },
   components:{
@@ -83,8 +84,8 @@ export  default {
     },
     getGlobalCity() {
       var _this = this;
-      this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/').then(function(res) {
-          console.log(res)
+      this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/?indate=&outdate=0&_rt=1498381496634&cityid=0101').then(function(res) {
+          this.citydata  = JSON.parse(res.body.hotCityList || "[{}]") ;
       },function() {
         console.log("fafafa")
       })
