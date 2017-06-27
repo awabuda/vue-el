@@ -25,14 +25,14 @@
           </li>
           <li class='keywords'>
             <p>
-              <label for=""></label>
-              <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off">
+              <label for="" ></label>
+              <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off" >
             </p>
           </li>
           <li>
             <p>
-              <label for=""></label>
-              <input type="text" name="" value="" placeholder="价格、星级" autocomplete="off">
+              <label for="" @click='isShowStar=!isShowStar'></label>
+              <input type="text" name="" value="" placeholder="价格、星级" autocomplete="off" v-text="pricestar">
             </p>
           </li>
         </ul>
@@ -41,8 +41,8 @@
         </router-link>
       </div>
       <globalCity v-if="globalcity" :historyCity='historyCity' @globalCb='citySelectCb' :cityId='cityId' :cityName='cityName'></globalCity>
-      <star v-if="isShowStar"></star>
-      <router-view name="index"></router-view>
+      <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect'></star>
+
     </div>
 
 </template>
@@ -66,7 +66,9 @@ export  default {
       },
       globalcity:false,
       historyCity:[],
-      isShowStar:false
+      isShowStar:false,
+      starList:[],
+      pricestar:''
 
 
     }
@@ -95,8 +97,7 @@ export  default {
       var _this = this;
       this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/?indate=&outdate=0&_rt=1498381496634&cityid=0101').then(function(res) {
           this.historyCity  = JSON.parse(res.body.hotCityList || "[{}]") ;
-      },function() {
-        console.log("fafafa")
+          this.starList = JSON.parse(res.body.starList|| '[{}]')
       })
     },
     citySelectCb: function (e) {
@@ -105,6 +106,21 @@ export  default {
         this.cityId = e.cityId;
       }
       this.globalcity = false;
+    },
+    priceSelect(e){
+      this.isShowStar = false;
+      if (e && e.price.highprice && e.price.lowprice){
+        this.pricestar +='$'+ e.price.lowprice + '-'+e.price.highprice
+      } else if (e && !e.price.highprice && e.price.lowprice){
+        this.pricestar +='$'+ e.price.lowprice + '以上'
+      } else if (e && !e.price.highprice && !e.price.lowprice){
+        this.pricestar+='价格不限'
+      };
+      if ( e && !e.starlevels ) {
+        this.pricestar+=',星级不限'
+      } else if ( e && e.starlevels ) {
+        console.log('具体逻辑以后写')
+      }
     }
   },
   beforeCreate () {// 组件实例刚被创建；组件属性计算之间入data el属性等

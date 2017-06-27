@@ -25,3 +25,6 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+// window.onhashchange = function (e) {
+//   console.log(e)
+// }

@@ -1,34 +1,29 @@
 <template>
-<div id="star">
+<div id="star" @click.stop='maskdie'>
   <div class="filter-sp " style="">
     <div class="sp-content">
       <div class="star">
         <div class="sp-tit">星级（可多选）</div>
         <ul class="star-list">
-          <li sn="-1" class="on">不限</li>
-          <li sn="12" class="">经济</li>
-          <li sn="3" class="">三星/舒适</li>
-          <li sn="4" class="">四星/高档</li>
-          <li sn="5" class="">五星/豪华</li>
+          <li v-for="(item ,index) in starlist" :sn='item.key' v-text='star[index].text' @click.stop="srarSelect(item,index)" :class="{on:star[index].checked}"></li>
         </ul>
       </div>
       <div class="price">
         <div class="sp-tit">价格</div>
         <ul class="price-list">
-          <li class="on" price-value="0">不限</li>
-          <li price-value="0-150" class="">0-150</li>
-          <li price-value="151-300" class="">151-300</li>
-          <li price-value="301-450" class="">301-450</li>
-          <li price-value="451-700" class="">451-700</li>
-          <li price-value="701" class="">700以上</li>
+          <li v-for='(item,index) in price' :price-value="item.lowprice+'-'+item.highprice" @click.stop="priceSelect(item,index)" :class="{on:item.checked}">
+            <span v-if="item.lowprice&& item.highprice">{{item.highprice}}-{{item.lowprice}}</span>
+            <span v-if='item.lowprice && !item.highprice'>{{item.lowprice}}以上</span>
+            <span v-if='!item.lowprice && !item.highprice'>不限</span>
+          </li>
         </ul>
       </div>
     </div>
     <!--s-->
     <div class="bot-btn bar">
       <ul>
-        <li class="reset">清空选择</li>
-        <li class="on confirm">确定</li>
+        <li class="reset" @click.stop="cleanSelect">清空选择</li>
+        <li class="on confirm" @click.stop="confirmSelect">确定</li>
       </ul>
     </div>
     <!--e-->
@@ -37,11 +32,110 @@
 </template>
 <script>
 export default {
-  props: [''],
+  props: ['starlist'],
   name: "star",
-  data: function data() {
+  data () {
     return {
+      selectData:{
+        price:{},
+        starlevels:[]
+      },
+      star:[
+        {
+          text:'不限',
+          checked:true
+        },
+        {
+          text:'舒适',
+          checked:false
+        },
+        {
+          text:"三星/舒适",
+          checked:false
+        },
+        {
+          text:"四星/高档",
+          checked:false
+        },
+        {
+          text:"五星/豪华",
+          checked:false
+        }
+      ],
+      price:[
+        {
+          highprice:"",
+          lowprice:'',
+          checked:true,
+        },
+        {
+          highprice:"0",
+          lowprice:'150',
+          checked:false,
+        },
+        {
+          highprice:"151",
+          lowprice:'300',
+          checked:false,
+        },
+        {
+          highprice:"301",
+          lowprice:'450',
+          checked:false,
+        },{
+          highprice:"451",
+          lowprice:'700',
+          checked:false,
+        },
+        {
+          highprice:"",
+          lowprice:'700',
+          checked:false,
+        }
+      ]
+    }
+  },
+  methods: {
+    srarSelect(e,index){
+      //这个地方的逻辑以后写
+      for (var i=0; i< this.star.length;i++ ){
+        if ( index == i){
+          this.star[i].checked  = !this.star[i].checked ;
+        }
+      }
 
+    },
+    priceSelect(e,index){
+      if ( e.highprice || e.lowprice ) {
+        this.selectData.price = e;
+
+      }
+      for (var i=0; i< this.price.length; i++){
+        this.price[i].checked = false;
+        this.price[index].checked = true;
+      }
+    },
+    cleanSelect(){
+      for (var i in this.selectData ){
+        this.selectData[i] = "";
+      }
+      //星级清空
+      for (var i in this.star ){
+        this.star[i].checked = false;
+      }
+      for (var i=0; i< this.price.length; i++){
+        this.price[i].checked = false;
+      }
+      this.star[0].checked = true;
+      this.price[0].checked = true;
+
+    },
+    confirmSelect(){
+
+      this.$emit('starCb',this.selectData)
+    },
+    maskdie() {
+    this.$emit('starCb')
     }
   }
 }
