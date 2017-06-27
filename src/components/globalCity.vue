@@ -1,5 +1,5 @@
 <template >
-  <div class='global_city' v-show='globalcity'>
+  <div class='global_city'>
     <div class="current">
       <div class="page-title">附近</div>
       <div class="city-list ">
@@ -8,11 +8,11 @@
     </div>
     <div class="search-history" v-show="hisShow">
       <div class="page-title">搜索历史</div>
-      <div class="search-clearhistory" >清除历史</div>
+      <div class="search-clearhistory" v-on:click='clearHisData'>清除历史</div>
       <div class="city-list" >
         <ul>
-            <li v-for="his in historyCity" :city-id="his.cityId" :area-type="his.areaType" :area-id="his.areaId" sug-origin="" class="on">
-              <span>{{his.cityName}}</span>
+            <li v-for="his in localCity" :city-id="his.cityId" :area-type="his.areaType" :area-id="his.areaId" sug-origin=""  :class="{on:his.cityId == cityId}" v-on:click="citySelect(his)">
+              <span v-text='his.cityName'></span>
             </li>
         </ul>
       </div>
@@ -21,7 +21,7 @@
       <div class="page-title">热门城市</div>
       <div class="city-list">
         <ul>
-          <li v-for="item in citydata" :city-id="item.cityId"  :area-type="item.areaType" :area-id="item.areaId" :sug-origin="item.sugOrigin" class=""      @click="citySelect(item)"><span>{{item.cityName}}</span></li>
+          <li v-for="item in historyCity" :city-id="item.cityId"  :area-type="item.areaType" :area-id="item.areaId" :sug-origin="item.sugOrigin" :class="{on:item.cityId==cityId}"      @click="citySelect(item)"><span v-text='item.cityName'></span></li>
         </ul>
       </div>
     </div>
@@ -34,8 +34,7 @@
               </span>
             </div>
             <div class="lc-show-hide" v-show='all.checked'>
-               <span v-for='item in allCityData' :city-id="item.cityId" :area-type="item.areaType" :area-id="item.areaId">{{item.cityName}}</span>
-
+               <span v-for='item in allCityData' :city-id="item.cityId" :area-type="item.areaType" :area-id="item.areaId" v-text="item.cityName" @click="citySelect(item)"></span>
             </div>
           </li>
         </ul>
@@ -48,11 +47,11 @@
 import storage from './storage/storage'
 
 export default  {
-  props:['citydata','globalcity'],
+  props:['historyCity',"cityId",'cityName'],
   data () {
       return {
         allCity:[{letter:"A",checked:false},{letter:"B",checked:false},{letter:"C",checked:false},{letter:"D",checked:false},{letter:"E",checked:false},{letter:"F",checked:false},{letter:"G",checked:false},{letter:"H",checked:false},{letter:"I",checked:false},{letter:"J",checked:false},{letter:"K",checked:false},{letter:"L",checked:false},{letter:"M",checked:false},{letter:"N",checked:false},{letter:"O",checked:false},{letter:"P",checked:false},{letter:"Q",checked:false},{letter:"R",checked:false},{letter:"S",checked:false},{letter:"T",checked:false},{letter:"U",checked:false},{letter:"V",checked:false},{letter:"W",checked:false},{letter:"X",checked:false},{letter:"Y",checked:false},{letter:"Z",checked:false}],
-        historyCity: JSON.parse(storage.getLocal("historyCity")||'[]'),
+        localCity: JSON.parse(storage.getLocal("historyCity")||'[]'),
         hisShow:!!storage.getLocal("historyCity") ?  true: false,
         allCityData:[],
         selectLetter:""
@@ -60,26 +59,27 @@ export default  {
       }
   },
   mounted () {
-    //this.getGlobalCity();
-    //console.log(1)
+
+  },
+  activated(){
+      console.log(0)
   },
   methods: {
     citySelect: function(e) {
-      var star = JSON.parse(storage.getLocal('historyCity')|| '[]');
-      for (var i=0;i<star.length;i++){
-        if( star[i].cityId == e.cityId ){
-          star.splice(i)
+      var hisData = JSON.parse(storage.getLocal('historyCity')|| '[]');
+      for (var i=0;i<hisData.length;i++){
+        if( hisData[i].cityId == e.cityId ){
+          hisData.splice(i,1)
         }
       }
-      star.unshift(e);
-      storage.setLocal('historyCity',star)
-      this.hideModule();
+      hisData.unshift(e);
+      storage.setLocal('historyCity',hisData)
+      this.$emit('globalCb',e);
+
     },
-    hideModule: function () {
-
-      this.globalCity = false;
-      console.log(this.globalCity)
-
+    clearHisData: function (e) {
+      storage.removeLocal('historyCity');
+      this.hisShow = false;
     }
     ,
     allCitySelect: function (all) {

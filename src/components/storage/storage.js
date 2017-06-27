@@ -15,6 +15,9 @@ store.prototype = {
   getLocal: function (a) {
     return localStorage.getItem(a);
   },
+  removeLocal: function (a) {
+    localStorage.removeItem(a);
+  },
   setSess: function (a , b) {
       if ( window.sessionStorage ) {
         sessionStorage.setItem( a, JSON.stringify(b)|| "" )
@@ -22,6 +25,9 @@ store.prototype = {
   },
   getSessin: function  (a) {
     return sessionStorage.getItem(a);
+  },
+  removeSessin: function (a) {
+    sessionStorage.removeItem(a);
   },
   setCookie: function  (name,value,ms){
     var expires = "";

@@ -4,7 +4,7 @@
       <div class="main">
         <ul>
           <li class="city">
-            <p class="cityname" @click='globalcity=!globalcity'>北京市</p>
+            <p class="cityname" @click='globalcity=!globalcity' :city-id="cityId">{{cityName}}</p>
             <span>
               <i></i>
               我的位置
@@ -40,7 +40,9 @@
            查找酒店
         </router-link>
       </div>
-      <globalCity v-show="globalcity" :citydata='citydata' :globalcity='globalcity'></globalCity>
+      <globalCity v-if="globalcity" :historyCity='historyCity' @globalCb='citySelectCb' :cityId='cityId' :cityName='cityName'></globalCity>
+      <star v-if="isShowStar"></star>
+      <router-view name="index"></router-view>
     </div>
 
 </template>
@@ -48,9 +50,12 @@
 <script >
 import storage from '../components/storage/storage'
 import globalCity from '../components/globalCity'
+import star from '../components/star'
 export  default {
   data() {
     return {
+      cityName:"北京",
+      cityId:"0101",
       indate: (new Date().getMonth()+1) +'月'+new Date().getDate() + '日',
       outdate: (new Date().getMonth()+1) +'月'+ (new Date().getDate()+2) +'日',
       bannerpic: JSON.parse(storage.getLocal('banner') || '[]'),
@@ -59,13 +64,17 @@ export  default {
         pagination:".swiper-pagination",
         loop: true
       },
-      globalcity: false,
-      citydata:[],
+      globalcity:false,
+      historyCity:[],
+      isShowStar:false
+
+
     }
   },
   components:{
     mySwiper: require('../components/swiper/swiper2.vue'),
-    globalCity
+    globalCity,
+    star
   },
   methods: { //虚拟dom中绑定的方法
     getBanner() {
@@ -85,10 +94,17 @@ export  default {
     getGlobalCity() {
       var _this = this;
       this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/?indate=&outdate=0&_rt=1498381496634&cityid=0101').then(function(res) {
-          this.citydata  = JSON.parse(res.body.hotCityList || "[{}]") ;
+          this.historyCity  = JSON.parse(res.body.hotCityList || "[{}]") ;
       },function() {
         console.log("fafafa")
       })
+    },
+    citySelectCb: function (e) {
+      if ( e.cityId != this.cityId ) {
+        this.cityName = e.cityName;
+        this.cityId = e.cityId;
+      }
+      this.globalcity = false;
     }
   },
   beforeCreate () {// 组件实例刚被创建；组件属性计算之间入data el属性等
