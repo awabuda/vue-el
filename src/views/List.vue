@@ -1,5 +1,5 @@
 <template >
-    <div id="index">
+    <div id="list">
       {{msg}}
     </div>
 </template>
@@ -18,7 +18,7 @@ export  default {
   },
   methods:{
     fetch () {
-      this.msg = this.$route.params.userId || this.msg
+      this.msg = this.$route.query
     }
   }
 

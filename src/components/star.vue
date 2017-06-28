@@ -1,5 +1,5 @@
 <template>
-<div id="star" @click.stop='maskdie'>
+<div id="star" @click.self.stop='maskdie'>
   <div class="filter-sp " style="">
     <div class="sp-content">
       <div class="star">
@@ -12,7 +12,7 @@
         <div class="sp-tit">价格</div>
         <ul class="price-list">
           <li v-for='(item,index) in price' :price-value="item.lowprice+'-'+item.highprice" @click.stop="priceSelect(item,index)" :class="{on:item.checked}">
-            <span v-if="item.lowprice&& item.highprice">{{item.highprice}}-{{item.lowprice}}</span>
+            <span v-if="item.lowprice&& item.highprice">{{item.lowprice}}-{{item.highprice}}</span>
             <span v-if='item.lowprice && !item.highprice'>{{item.lowprice}}以上</span>
             <span v-if='!item.lowprice && !item.highprice'>不限</span>
           </li>
@@ -43,23 +43,28 @@ export default {
       star:[
         {
           text:'不限',
-          checked:true
+          checked:true,
+          key:'-1'
         },
         {
           text:'舒适',
-          checked:false
+          checked:false,
+          key:'12'
         },
         {
           text:"三星/舒适",
-          checked:false
+          checked:false,
+          key:'3'
         },
         {
           text:"四星/高档",
-          checked:false
+          checked:false,
+          key:'4'
         },
         {
           text:"五星/豪华",
-          checked:false
+          checked:false,
+          key:'5'
         }
       ],
       price:[
@@ -69,22 +74,22 @@ export default {
           checked:true,
         },
         {
-          highprice:"0",
-          lowprice:'150',
+          highprice:"150",
+          lowprice:'0',
           checked:false,
         },
         {
-          highprice:"151",
-          lowprice:'300',
+          highprice:"300",
+          lowprice:'151',
           checked:false,
         },
         {
-          highprice:"301",
-          lowprice:'450',
+          highprice:"450",
+          lowprice:'301',
           checked:false,
         },{
-          highprice:"451",
-          lowprice:'700',
+          highprice:"700",
+          lowprice:'451',
           checked:false,
         },
         {
@@ -95,20 +100,35 @@ export default {
       ]
     }
   },
+  mounted: function mounted() {
+    //do something after mounting vue instance
+    location.hash='!_X!VUE=isShowStar'
+  },
   methods: {
     srarSelect(e,index){
-      //这个地方的逻辑以后写
-      for (var i=0; i< this.star.length;i++ ){
-        if ( index == i){
-          this.star[i].checked  = !this.star[i].checked ;
+      if (index == 0){
+        for (var i=0;i< this.star.length;i++ ){
+          this.star[i].checked = false;
+        }
+        this.star[0].checked = true;
+        this.selectData.starlevels.length = 0;
+      } else {
+        this.star[0].checked = false;
+        this.star[index].checked = !this.star[index].checked;
+        // 存在就去除
+        if (this.selectData.starlevels.indexOf(e.key) > -1){
+          this.selectData.starlevels.splice(this.selectData.starlevels.indexOf(e.key),1)
+        } else {// 没有加添加
+          this.selectData.starlevels.push(e.key)
         }
       }
-
+      if ( this.selectData.starlevels.length == 0) {
+        this.star[0].checked = true;
+      }
     },
     priceSelect(e,index){
       if ( e.highprice || e.lowprice ) {
         this.selectData.price = e;
-
       }
       for (var i=0; i< this.price.length; i++){
         this.price[i].checked = false;
@@ -116,9 +136,8 @@ export default {
       }
     },
     cleanSelect(){
-      for (var i in this.selectData ){
-        this.selectData[i] = "";
-      }
+      this.selectData.price = {};
+      this.selectData.starlevels = [];
       //星级清空
       for (var i in this.star ){
         this.star[i].checked = false;
@@ -131,12 +150,25 @@ export default {
 
     },
     confirmSelect(){
-
+      history.back();
       this.$emit('starCb',this.selectData)
     },
     maskdie() {
-    this.$emit('starCb')
+      history.back();
+      //this.$emit('starCb');
     }
+  },
+  beforeUpdate () {// 组件更新之前
+  },
+  updated () {// 组件更新之后
+  },
+  activated () {// for keep-active 组件激活之时调用
+  },
+  deactivated () {// for keep-active 组件激活之后
+  },
+  beforeDestory () {// 组件销毁之前调用
+  },
+  destory () {// 组件销毁后调用
   }
 }
 </script>

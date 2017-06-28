@@ -59,10 +59,10 @@ export default  {
       }
   },
   mounted () {
-
+    location.hash = '!_X!VUE=globalcity'
   },
   activated(){
-      console.log(0)
+
   },
   methods: {
     citySelect: function(e) {
@@ -74,6 +74,7 @@ export default  {
       }
       hisData.unshift(e);
       storage.setLocal('historyCity',hisData)
+      history.back();
       this.$emit('globalCb',e);
 
     },

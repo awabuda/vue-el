@@ -25,24 +25,26 @@
           </li>
           <li class='keywords'>
             <p>
-              <label for="" ></label>
-              <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off" >
+              <label for="" @click='getkeyword'></label>
+              <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off" :value="kwSelect.nameCn">
             </p>
           </li>
           <li>
             <p>
               <label for="" @click='isShowStar=!isShowStar'></label>
-              <input type="text" name="" value="" placeholder="价格、星级" autocomplete="off" v-text="pricestar">
+              <input type="text" name="" :value="pricestar" placeholder="价格/星级" autocomplete="off">
             </p>
           </li>
         </ul>
-        <router-link :to="{path:'/list',name:'list',params:{userId:123}}" class="search_btn" tag='div'>
+        <router-link :to="{path:'/list',name:'list',query:parmas}" class="search_btn" tag='div'>
            查找酒店
         </router-link>
       </div>
       <globalCity v-if="globalcity" :historyCity='historyCity' @globalCb='citySelectCb' :cityId='cityId' :cityName='cityName'></globalCity>
-      <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect'></star>
-
+      <transition name="fade" mode="out-in" appear>
+        <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' ></star>
+      </transition>
+      <keyword v-if='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn'></keyword>
     </div>
 
 </template>
@@ -51,6 +53,7 @@
 import storage from '../components/storage/storage'
 import globalCity from '../components/globalCity'
 import star from '../components/star'
+import keyword from '../components/keyword'
 export  default {
   data() {
     return {
@@ -67,8 +70,29 @@ export  default {
       globalcity:false,
       historyCity:[],
       isShowStar:false,
+      isShowKeyWord:false,
       starList:[],
-      pricestar:''
+      pricestar:'',
+      starlevels:{
+        12:'舒适型',
+        3:'三星/经济型',
+        4:"四星/高档",
+        5:"五星/豪华"
+      },
+      keywordDate:[],
+      kwSelect:{
+        nameCn:""
+      },
+      parmas:{
+        indate:"",
+        outdate:"",
+        starlevels:"",
+        isNear:"",
+        keyword:'',
+        lowprice:"",
+        highprice:"",
+        keywords:''
+      }
 
 
     }
@@ -76,9 +100,29 @@ export  default {
   components:{
     mySwiper: require('../components/swiper/swiper2.vue'),
     globalCity,
-    star
+    star,
+    keyword
+  },
+  watch:{
+    'cityId':function (ol,nl){
+        if ( ol != nl ) {
+          for(var i in this.kwSelect ) {
+            this.kwSelect[i] = '';
+          }
+        }
+    }
   },
   methods: { //虚拟dom中绑定的方法
+    keySelect(item){
+      this.kwSelect = item;
+    },
+    getkeyword(){
+      this.$http.get('https://m.elong.com/hotelwxqb/api/gethotelsearchrecommendplace/',{params:{city:this.cityId}
+    }).then(function (res) {
+      this.keywordDate = JSON.parse(res.body.simpleFilterInfos);
+      this.isShowKeyWord = true;
+    })
+    },
     getBanner() {
       this.$http.get('/api/banner').then(function (res) {
         if ( !!res.body.data.advList ) {
@@ -89,8 +133,6 @@ export  default {
             storage.setLocal('banner',JSON.stringify(this.bannerpic))
           }
         }
-      },function (res) {
-        console.log('请求失败?indate=2017-06-20&outdate=0&_rt=1497959633453&cityid=0101')
       })
     },
     getGlobalCity() {
@@ -105,23 +147,29 @@ export  default {
         this.cityName = e.cityName;
         this.cityId = e.cityId;
       }
-      this.globalcity = false;
+      //this.globalcity = false;
     },
     priceSelect(e){
-      this.isShowStar = false;
+      this.pricestar = ""; // 先清空
       if (e && e.price.highprice && e.price.lowprice){
-        this.pricestar +='$'+ e.price.lowprice + '-'+e.price.highprice
+        this.pricestar +='$'+ e.price.lowprice + '-'+e.price.highprice+'，'
       } else if (e && !e.price.highprice && e.price.lowprice){
-        this.pricestar +='$'+ e.price.lowprice + '以上'
-      } else if (e && !e.price.highprice && !e.price.lowprice){
-        this.pricestar+='价格不限'
+        this.pricestar +='$'+ e.price.lowprice + '以上，'
+      } else if (e && !e.price.highprice && !e.price.lowprice &&e.starlevels.length > 0 ){
+        this.pricestar+='价格不限，'
       };
-      if ( e && !e.starlevels ) {
-        this.pricestar+=',星级不限'
-      } else if ( e && e.starlevels ) {
-        console.log('具体逻辑以后写')
+      if ( e && e.starlevels && e.starlevels.length == 0 && (e.price.highprice || e.price.lowprice)) {
+        this.pricestar+='星级不限'
+      } else if ( e && e.starlevels && e.starlevels.length > 0 ) {
+        for (var i = 0; i < e.starlevels.length;i++ ){
+          e.starlevels = e.starlevels
+          this.pricestar += this.starlevels[e.starlevels[i]]
+        }
       }
+      //this.isShowStar = false;
+
     }
+
   },
   beforeCreate () {// 组件实例刚被创建；组件属性计算之间入data el属性等
   },
@@ -129,10 +177,26 @@ export  default {
    this.getBanner();
    this.getGlobalCity();
 
+
   },
   beforeMount () {// 编译模板/挂在之前
   },
   mounted () {// 编译模板、挂在之后。==》 不保证组件已在document中
+    var _this = this;
+    window.onhashchange =  function ( ) { //监听hash 以控制部分组件的显示与隐藏
+      var plugin = _this.getHash('!_X!VUE')
+      if (plugin){
+        _this[plugin] = true;
+      } else {
+        _this.isShowStar = false;
+        _this.isShowKeyWord = false;
+        _this.globalcity = false;
+      }
+    }
+    var pl = _this.getHash('!_X!VUE');
+    if ( pl ) {
+      _this[pl] = true;
+    }
   },
   beforeUpdate () {// 组件更新之前
   },
