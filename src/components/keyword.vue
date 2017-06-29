@@ -85,7 +85,6 @@ export default {
       history.back();
     },
     cleanSelect() {
-      alert(1)
       storage.removeLocal('localKeyW');
       this.isShowhis = false;
     }
