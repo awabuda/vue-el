@@ -11,8 +11,9 @@
   <div>
     <span class='festival'>14</span>
     <span class="festivalText">端午节</span>
+    <b class="holiday">休</b>
   </div>
-  <b class="holiday">休</b>
+
 </li>
 <li class="active">
   <div>

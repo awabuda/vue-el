@@ -25,7 +25,7 @@
           </li>
           <li class='keywords'>
             <p>
-              <label for="" @click='getkeyword'></label>
+              <label for="" @click='isShowKeyWord = !isShowKeyWord'></label>
               <input type="text" name="" value="" placeholder="关键词/酒店/地址" autocomplete="off" :value="kwSelect.nameCn">
             </p>
           </li>
@@ -45,7 +45,7 @@
         <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' ></star>
       </transition>
       <keyword v-if='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn'></keyword>
-      <calendar v-if='isShowCalendar' :starDate="new Date().format('yyyy-MM-dd')"></calendar>
+      <calendar v-if='isShowCalendar' @calSelect="calSelected"></calendar>
     </div>
 
 </template>
@@ -109,21 +109,21 @@ export  default {
     calendar
   },
   watch:{
-    'priceParams': function (nl,ol){
+    'priceParams': function ( nl,  ol){
       if ( ol != nl ){
         this.parmas.lowprice  = nl.price.lowprice;
         this.parmas.highprice = nl.price.highprice;
         this.parmas.starlevels = nl.starlevels.join(',')
       }
     },
-    'outdate': function ( nl ,ol){
-      if (ol != nl) {
-        this.parmas.outdate = new Date(nl).format('yyyy-MM-dd');
+    'parmas.indate':function ( nl, ol ) {
+      if ( nl != ol ) {
+        this.indate  = new Date(nl).format('MM月dd日')
       }
     },
-    'indate': function ( nl,ol ) {
-      if (ol !=nl) {
-        this.params.indate = new Date(nl).format('yyyy-MM-dd');
+    'parmas.outdate': function ( nl, ol){
+      if ( nl != ol ) {
+        this.outdate  = new Date(nl).format('MM月dd日')
       }
     },
     'cityId':function ( nl,ol ){
@@ -132,10 +132,17 @@ export  default {
             this.kwSelect[i] = '';
           }
           this.parmas.city = nl;
+          this.getkeyword();
         }
     }
   },
   methods: { //虚拟dom中绑定的方法
+    calSelected(ind,outd){
+      if ( ind && outd ) {
+        this.parmas.indate = new Date(ind).format('yyyy-MM-dd');
+        this.parmas.outdate = new Date(outd).format('yyyy-MM-dd')
+      }
+    },
     keySelect(item){
       this.kwSelect = item;
     },
@@ -143,7 +150,6 @@ export  default {
       this.$http.get('https://m.elong.com/hotelwxqb/api/gethotelsearchrecommendplace/',{params:{city:this.cityId}
     }).then(function (res) {
       this.keywordDate = JSON.parse(res.body.simpleFilterInfos);
-      this.isShowKeyWord = true;
     })
     },
     getBanner() {
@@ -160,7 +166,7 @@ export  default {
     },
     getGlobalCity() {
       var _this = this;
-      this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/?indate=&outdate=0&_rt=1498381496634&cityid=0101').then(function(res) {
+      this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/?_rt=1498381496634&cityid=0101').then(function(res) {
           this.historyCity  = JSON.parse(res.body.hotCityList || "[{}]") ;
           this.starList = JSON.parse(res.body.starList|| '[{}]')
       })
@@ -202,6 +208,7 @@ export  default {
   created () {// 组件实例已经创建完成，属性已绑定，但Dom还未生成，el 属性还不存在
    this.getBanner();
    this.getGlobalCity();
+   this.getkeyword();
 
 
   },

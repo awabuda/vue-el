@@ -1,10 +1,31 @@
 <template>
   <div id='calander'>
     <div class="calander_wrap">
-      <section class='cld_item' v-for='s in allMonth'>
+      <section class='cld_item' v-for='(s,key) in allMonth'>
         <h3 class="title_date">{{s.month}}</h3>
         <ul class="cld_day">
-          <li class="" v-for='day in s.modays'><span class="date-elem" v-text="day-s.firDay > 0 ? day-s.firDay : ''" ></span>
+          <li  v-for='(day,index) in s.modays' :class='{holiday:festival.holidaytag[s.all[index].date]=="休",work:festival.holidaytag[s.all[index].date]&& festival.holidaytag[s.all[index].date] !="休",active:s.all[index].checked,activeduring:s.all[index].activeduring}' @click="riliSelect(key,index)">
+            <!-- 又是假期又是 节日-->
+            <div v-if='festival.holidaytag[s.all[index].date]&& (festival.cnfestivaltag[s.all[index].date] || festival.festivaltag[s.all[index].dateCN])'>
+
+              <span class='festival date-elem' v-text="day-s.firDay > 0 ? day-s.firDay : ''"></span>
+              <span class="festivalText">{{festival.cnfestivaltag[s.all[index].date] ||festival.festivaltag[s.all[index].dateCN]}}</span>
+              <b v-text="festival.holidaytag[s.all[index].date]" class='holiday'></b>
+            </div>
+            <!-- 假期 非节日 -->
+            <div class="" v-else-if="festival.holidaytag[s.all[index].date] && !festival.cnfestivaltag[s.all[index].date] && !festival.festivaltag[s.all[index].dateCN]">
+              <span class="date-elem" v-text="day-s.firDay > 0 ? day-s.firDay : ''"></span>
+              <b v-text="festival.holidaytag[s.all[index].date]" class='holiday'></b>
+            </div>
+            <div class="" v-else-if="!festival.holidaytag[s.all[index].date] && (festival.cnfestivaltag[s.all[index].date] && festival.festivaltag[s.all[index].dateCN])">
+              <span class='festival' v-text="day-s.firDay > 0 ? day-s.firDay : ''"></span>
+              <span class="festivalText">{{festival.cnfestivaltag[s.all[index].date] ||festival.festivaltag[s.all[index].dateCN]}}</span>
+            </div>
+            <div class="" v-else>
+              <span class="date-elem" v-text="day-s.firDay > 0 ? day-s.firDay : ''"></span>
+            </div>
+
+
           </li>
         </ul>
       </section>
@@ -26,9 +47,36 @@ import festifval from './festival.js'
 export default {
   // props indate outdate isdouble mindate maxdate
   props:[''],
+  data: function data() {
+    return {
+      mindate:new Date().format('yyyy-MM-dd'),
+      maxdate:new Date().add(5,2).format('yyyy-MM-dd'),
+      allMonth:[],
+      startText:'入住',
+      endText:"离店",
+      tag: ["日", "一", "二", "三", "四", "五", "六"],
+      festival:festifval,
+      doubleClick : true,
+      selectValue:{
+        indate:{
+          key:'',
+          index:'',
+          text:''
+        },
+        outdate:{
+          key:'',
+          index:'',
+          text:''
+        }
+      }
+
+    }
+  },
   name: "calendar",
   mounted: function mounted() {
-    location.hash='!_X!VUE=isShowCalendar'
+    location.hash='!_X!VUE=isShowCalendar';
+  //  this.getFestival();
+    //console.log(this.festival)
     this.getDiffMoth(this.mindate,this.maxdate);
   },
   /**
@@ -42,6 +90,54 @@ export default {
    * 8 modays
    */
   methods: {
+    /**
+     * @param  {[type]} key [月份key]
+     * @param  {[type]} index [第几天 index]
+     */
+    riliSelect(key,index){
+      if ( this.allMonth[key].all[index].isdisable ) {
+          this.allMonth[key].all[index].checked = !this.allMonth[key].all[index].checked;
+
+           if ( !this.doubleClick ){
+            this.$emit('calSelect',this.allMonth[key].all[index].date);
+            history.back()
+          } else {
+            if ( this.selectValue.indate.text == this.allMonth[key].all[index].date ){
+              this.selectValue.indate.text = "";
+              this.selectValue.indate.key  = "";
+              this.selectValue.indate.index = "";
+              console.log(1)
+              return false;
+            }
+            if ( this.selectValue.indate.text == '' ) {
+              console.log(2)
+              this.selectValue.indate.text = this.allMonth[key].all[index].date;
+              this.selectValue.indate.key  = key;
+              this.selectValue.indate.index = index;
+            } else if ( new Date(this.selectValue.indate.text).getTime() > new Date(this.allMonth[key].all[index].date).getTime() ){
+
+              this.allMonth[this.selectValue.indate.key ].all[this.selectValue.indate.index].checked = false;
+              this.selectValue.indate.text = this.allMonth[key].all[index].date;
+              this.selectValue.indate.key  = key;
+              this.selectValue.indate.index = index;
+            } else {
+              this.selectValue.outdate.text = this.allMonth[key].all[index].date;
+            }
+
+            if ( this.selectValue.indate.text && this.selectValue.outdate.text ) {
+              this.$emit('calSelect',this.selectValue.indate.text,this.selectValue.outdate.text);
+              setTimeout(function () {
+                history.back();
+              },400)
+
+            }
+          }
+
+      }
+    },
+    getFestival () {
+      this.festival = this.cloneDeep(festifval);
+    },
     getDiffMoth : function ( d1 , d2) {
       if (d1 == d2) {
           var d = {};
@@ -60,7 +156,9 @@ export default {
             }
             cpt.checked = false; // 点中态；
             cpt.date = new Date (d.firstDate).add(j-d.firDay,3).format('yyyy-MM-dd');
+            console.log(festifval.holidaytag)
             cpt.dateCN = new Date(cpt.date).format('MM-dd');
+            cpt.activeduring = false;
             d.all.push(cpt);
           }
           this.allMonth.push(d)
@@ -82,6 +180,7 @@ export default {
             cpt.checked = false; // 点中态；
             cpt.date = new Date (s.firstDate).add((j-s.firDay),3).format('yyyy-MM-dd');
             cpt.dateCN = new Date(cpt.date).format('MM-dd');
+            cpt.activeduring = false;
             if ( j >= s.firDay ) {
 
               cpt.isdisable = true;
@@ -89,9 +188,6 @@ export default {
             } else {
               cpt.isdisable = false; // 是否可点
             }
-            console.log("当时"+new Date().format('yyyy-MM-dd'))
-            console.log("cpt"+cpt.date)
-            console.log('月日'+cpt.dateCN)
             s.all.push(cpt);
           }
 
@@ -101,17 +197,8 @@ export default {
       //console.log(JSON.stringify(this.allMonth))
 
     }
-  },
-  data: function data() {
-    return {
-      mindate:new Date().format('yyyy-MM-dd'),
-      maxdate:new Date().add(0,2).format('yyyy-MM-dd'),
-      allMonth:[],
-      startText:'入住',
-      endText:"离店",
-      tag: ["日", "一", "二", "三", "四", "五", "六"]
-    }
   }
+
 }
 </script>
 <style lang="scss">
@@ -138,6 +225,7 @@ export default {
 			height:30px;
 			text-align: center;
 			line-height: 30px;
+      background-color: lightgray;
 		}
 		.cld_day{
 			width:98%;
@@ -184,6 +272,17 @@ export default {
 					}
 
 				}
+        &.work{
+          color:#2c3e50;
+          span.date-elem{
+            color:#2c3e50;
+          }
+          b.holiday{
+            position: absolute;
+						top:0;
+						right: 0;
+          }
+        }
 				span.festivalText{
 					width: 100%;
 					height:100%;
@@ -192,10 +291,10 @@ export default {
 					line-height: 40px;
 				}
 				&.active{
+
 					div{
 						height: 100%;
 						width: 100%;
-						border-radius: 5px 0 0 5px;
 						background-color: #09bb07;
 						overflow: hidden;
 						span.active{
@@ -224,8 +323,14 @@ export default {
 
 						}
 					}
-				}
-				&.active-during{
+
+        }
+        &.active:nth-child(1  ){
+          div{
+            background: red;
+          }
+        }
+				&.activeduring{
 					span.date-elem{
 						background-color:#DFFFDF;
 						color:#09bb07;

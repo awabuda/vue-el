@@ -59,6 +59,7 @@ Date.prototype.date = function  (part){
 //判断两个时间是否相等，可以通过part参数指定判断的精度
 //part:1-年，2-月，3-日，4-时，5-分，6-秒，7-毫(默认)
 Date.prototype.equal = function (date, part) {
+
   if (typeof this != typeof date) return false;
 	var t = this.toArray();
 	date = date.toArray();
