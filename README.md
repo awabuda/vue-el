@@ -1,5 +1,6 @@
 # 关于项目
 ```
+-[Y] 关于接口跨越问题；请安装chrome 跨越插件；或者通过exporess 做代理
 -[Y] 本地demo主要应用了vue-cli 一个很强大工具
 		npm install -g vue-cli
 -[Y] 通过 vue-cli 去初始化创建一个项目比如  vue-elong
