@@ -5,6 +5,10 @@ Date.MSINDAY = 864e5;
 Date.prototype.toArray =  function () {
   return [this.getFullYear(), this.getMonth(), this.getDate(), this.getHours(), this.getMinutes(), this.getSeconds(), this.getMilliseconds()];
 };
+Date.prototype.getStartDate =  function () {
+
+  return  new Date(this.getFullYear(),this.getMonth(),1);
+};
 Date.prototype.format = function (fmt) {
   fmt = fmt || "yyyy-MM-dd";
   var  o = {

@@ -1,0 +1,37 @@
+<li class="holiday">
+  <span class="date-elem">2</span>
+  <b class='holiday'>休</b></li>
+<li>
+    <div>
+      <span class='festival'>14</span>
+      <span class="festivalText">母亲节</span>
+    </div>
+</li>
+<li class="holiday" date="">
+  <div>
+    <span class='festival'>14</span>
+    <span class="festivalText">端午节</span>
+  </div>
+  <b class="holiday">休</b>
+</li>
+<li class="active">
+  <div>
+    <span class="active">5</span>
+    <span class="activeText">入住</span>
+  </div>
+</li>
+<li class='active-during'><span class="date-elem">6</span></li>
+<li class="disabled active-during">
+  <span class="date-elem">7</span>
+</li>
+<li class="active">
+  <div>
+    <span class="active">8</span>
+    <span class="activeText">滚蛋</span>
+  </div>
+</li>
+<li class="">
+  <span class="date-elem">9</span>
+</li>
+<li class=""><span class="date-elem">10</span>
+</li>

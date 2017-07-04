@@ -10,13 +10,13 @@
               我的位置
             </span>
           </li>
-          <li class='date'>
+          <li class='date' @click='isShowCalendar=!isShowCalendar'>
             <dl class="in">
               <dt> 入住</dt>
               <dd data-value="" class="d1">{{indate}}</dd>
               <dd class="d2"> 今天 </dd>
             </dl>
-            <div class="total"><span><em>1</em>晚</span></div>
+            <div class="total"><span><em>{{total}}</em>晚</span></div>
             <dl class="out " >
               <dt> 离店</dt>
               <dd data-value="" class="d1">{{outdate}}</dd>
@@ -45,6 +45,7 @@
         <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' ></star>
       </transition>
       <keyword v-if='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn'></keyword>
+      <calendar v-if='isShowCalendar' :starDate="new Date().format('yyyy-MM-dd')"></calendar>
     </div>
 
 </template>
@@ -54,14 +55,16 @@ import storage from '../components/storage/storage'
 import globalCity from '../components/globalCity'
 import star from '../components/star'
 import keyword from '../components/keyword'
+import calendar from '../components/calendar/calendar.vue'
 export  default {
   data() {
     return {
       cityName:"北京",
       cityId:"0101",
-      indate: (new Date().getMonth()+1) +'月'+new Date().getDate() + '日',
-      outdate: (new Date().getMonth()+1) +'月'+ (new Date().getDate()+2) +'日',
+      indate: new Date().format('MM月dd日'),
+      outdate: new Date().add(1,3).format('MM月dd日'),
       bannerpic: JSON.parse(storage.getLocal('banner') || '[]'),
+      total:1,
       swiperOption: {
         autoplay: 2000,
         pagination:".swiper-pagination",
@@ -71,7 +74,9 @@ export  default {
       historyCity:[],
       isShowStar:false,
       isShowKeyWord:false,
+      isShowCalendar:false,
       starList:[],
+      priceParams:{},
       pricestar:'',
       starlevels:{
         12:'舒适型',
@@ -84,31 +89,49 @@ export  default {
         nameCn:""
       },
       parmas:{
-        indate:"",
-        outdate:"",
+        indate:new Date().format('yyyy-MM-dd'),
+        outdate:new Date().add(1,3).format('yyyy-MM-dd'),
         starlevels:"",
         isNear:"",
         keyword:'',
         lowprice:"",
         highprice:"",
-        keywords:''
+        keywords:'',
+        city:''
       }
-
-
     }
   },
   components:{
     mySwiper: require('../components/swiper/swiper2.vue'),
     globalCity,
     star,
-    keyword
+    keyword,
+    calendar
   },
   watch:{
-    'cityId':function (ol,nl){
+    'priceParams': function (nl,ol){
+      if ( ol != nl ){
+        this.parmas.lowprice  = nl.price.lowprice;
+        this.parmas.highprice = nl.price.highprice;
+        this.parmas.starlevels = nl.starlevels.join(',')
+      }
+    },
+    'outdate': function ( nl ,ol){
+      if (ol != nl) {
+        this.parmas.outdate = new Date(nl).format('yyyy-MM-dd');
+      }
+    },
+    'indate': function ( nl,ol ) {
+      if (ol !=nl) {
+        this.params.indate = new Date(nl).format('yyyy-MM-dd');
+      }
+    },
+    'cityId':function ( nl,ol ){
         if ( ol != nl ) {
           for(var i in this.kwSelect ) {
             this.kwSelect[i] = '';
           }
+          this.parmas.city = nl;
         }
     }
   },
@@ -166,7 +189,10 @@ export  default {
           this.pricestar += this.starlevels[e.starlevels[i]]
         }
       }
-      //this.isShowStar = false;
+
+      this.priceParams = e;
+      //console.log(this.priceParams)
+
 
     }
 
@@ -191,6 +217,7 @@ export  default {
         _this.isShowStar = false;
         _this.isShowKeyWord = false;
         _this.globalcity = false;
+        _this.isShowCalendar = false;
       }
     }
     var pl = _this.getHash('!_X!VUE');
