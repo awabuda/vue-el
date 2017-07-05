@@ -35,13 +35,13 @@ npm run build --report
 1. 数据的请求  安装了vue-resource 然后在项目里面直接this.$http.get...
 	[vueResource](https://github.com/pagekit/vue-resource)
 	[某博客](http://www.cnblogs.com/axl234/p/5899137.html)
-	
+
 	```
 		在main.js中
 			import vueResource from 'vue-resource'
 			Vue.use(vueResource)
 		然后在业务里面直接this.$http.get().then(success,error）
-		
+
 	```
 2. swiper 插件下面有说明 不做介绍
 3. vue-router 路由的组件
@@ -50,9 +50,9 @@ npm run build --report
   * swiper组件的实现  有三种方法
 	  ```
 	   -[Y] 直接 npm install swiper  直接引用；在某个生命周期中直接初始化即可;
-	        
+
 	   -[Y]直接 npm install vue-awesome-swiper 然后引入  swiper swiper-slide ;根据先关情况即可(https://blog.csdn.net/xiaogezl/article/details/69676812)
-	        
+
 	   -[N] 尚未解决 : vue-swiper
 	  ```
 * 路由器的跳转router-link
@@ -61,19 +61,19 @@ npm run build --report
 	  <router-link to="home">Home</router-link>
 	  <!-- 渲染结果 -->
 	  <a href="home">Home</a>
-	
+
 	  <!-- 使用 v-bind 的 JS 表达式 -->
 	  <router-link v-bind:to="'home'">Home</router-link>
-	
+
 	  <!-- 不写 v-bind 也可以，就像绑定别的属性一样 -->
 	  <router-link :to="'home'">Home</router-link>
-	
+
 	  <!-- 同上 -->
 	  <router-link :to="{ path: 'home' }">Home</router-link>
-	
+
 	  <!-- 命名的路由 -->
 	  <router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
-	
+
 	  <!-- 带查询参数，下面的结果为 /register?plan=private -->
 	  <router-link :to="{ path: 'register', query: { plan: 'private' }}">Register</router-link>
  	```
@@ -87,10 +87,8 @@ npm run build --report
 	import store from './store';
 	Vue.use(store)....
 	这样在业务代码中就可以直接使用 this.store  无需在每个业务里面单独引入；
-	```	
- 	
-	
+	```
+
+
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
-

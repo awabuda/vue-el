@@ -4,7 +4,7 @@
       <section class='cld_item' v-for='(s,key) in allMonth'>
         <h3 class="title_date">{{s.month}}</h3>
         <ul class="cld_day">
-          <li  v-for='(day,index) in s.modays' :class='{holiday:festival.holidaytag[s.all[index].date]=="休",work:festival.holidaytag[s.all[index].date]&& festival.holidaytag[s.all[index].date] !="休",active:s.all[index].checked,activeduring:s.all[index].activeduring}' @click="riliSelect(key,index)">
+          <li  v-for='(day,index) in s.modays' :class='{holiday:festival.holidaytag[s.all[index].date]=="休",work:festival.holidaytag[s.all[index].date]&& festival.holidaytag[s.all[index].date] !="休",active:s.all[index].checked,activeduring:s.all[index].activeduring,isdisable:!s.all[index].isdisable}' @click="riliSelect(key,index)">
             <!-- 又是假期又是 节日-->
             <div v-if='festival.holidaytag[s.all[index].date]&& (festival.cnfestivaltag[s.all[index].date] || festival.festivaltag[s.all[index].dateCN])'>
 
@@ -46,7 +46,7 @@
 import festifval from './festival.js'
 export default {
   // props indate outdate isdouble mindate maxdate
-  props:[''],
+  props:['indate','outdate','ef'],
   data: function data() {
     return {
       mindate:new Date().format('yyyy-MM-dd'),
@@ -57,6 +57,7 @@ export default {
       tag: ["日", "一", "二", "三", "四", "五", "六"],
       festival:festifval,
       doubleClick : true,
+      today:new Date().format('yyyy-MM-dd'),
       selectValue:{
         indate:{
           key:'',
@@ -78,6 +79,7 @@ export default {
   //  this.getFestival();
     //console.log(this.festival)
     this.getDiffMoth(this.mindate,this.maxdate);
+
   },
   /**
    * 1是否可点 isdisable
@@ -95,6 +97,7 @@ export default {
      * @param  {[type]} index [第几天 index]
      */
     riliSelect(key,index){
+      var _this = this;
       if ( this.allMonth[key].all[index].isdisable ) {
           this.allMonth[key].all[index].checked = !this.allMonth[key].all[index].checked;
 
@@ -106,11 +109,11 @@ export default {
               this.selectValue.indate.text = "";
               this.selectValue.indate.key  = "";
               this.selectValue.indate.index = "";
-              console.log(1)
+
               return false;
             }
             if ( this.selectValue.indate.text == '' ) {
-              console.log(2)
+
               this.selectValue.indate.text = this.allMonth[key].all[index].date;
               this.selectValue.indate.key  = key;
               this.selectValue.indate.index = index;
@@ -122,13 +125,24 @@ export default {
               this.selectValue.indate.index = index;
             } else {
               this.selectValue.outdate.text = this.allMonth[key].all[index].date;
+              this.selectValue.outdate.key  = key;
+              this.selectValue.outdate.index = index;
             }
 
             if ( this.selectValue.indate.text && this.selectValue.outdate.text ) {
+              this.allMonth.forEach(function (month) {
+                month.all.forEach(function (item) {
+                  if (new Date(item.date).diff(new Date(_this.selectValue.indate.text),3)>0 && new Date(item.date).diff(new Date(_this.selectValue.outdate.text),3)<0 ){
+                    item.activeduring = true;
+                  }
+                })
+              })
+
+
               this.$emit('calSelect',this.selectValue.indate.text,this.selectValue.outdate.text);
               setTimeout(function () {
                 history.back();
-              },400)
+              },300)
 
             }
           }
@@ -154,9 +168,14 @@ export default {
             } else {
               cpt.isdisable = false; // 是否可点
             }
+            if (new Date(cpt.date).diff(new Date(this.today),3) < 0) {
+               cpt.isdisable = false;
+            }
             cpt.checked = false; // 点中态；
             cpt.date = new Date (d.firstDate).add(j-d.firDay,3).format('yyyy-MM-dd');
-            console.log(festifval.holidaytag)
+            // if ( cpt.date == this.indate || cpt.date == this.outdate ){
+            //   cpt.checked = true;
+            // }
             cpt.dateCN = new Date(cpt.date).format('MM-dd');
             cpt.activeduring = false;
             d.all.push(cpt);
@@ -179,14 +198,18 @@ export default {
             };
             cpt.checked = false; // 点中态；
             cpt.date = new Date (s.firstDate).add((j-s.firDay),3).format('yyyy-MM-dd');
+            // if ( cpt.date == this.indate || cpt.date == this.outdate ){
+            //   cpt.checked = true;
+            // }
             cpt.dateCN = new Date(cpt.date).format('MM-dd');
             cpt.activeduring = false;
             if ( j >= s.firDay ) {
-
               cpt.isdisable = true;
-
             } else {
               cpt.isdisable = false; // 是否可点
+            }
+            if (new Date(cpt.date).diff(new Date(this.today),3) < 0) {
+               cpt.isdisable = false;
             }
             s.all.push(cpt);
           }
@@ -194,8 +217,6 @@ export default {
           this.allMonth.push(s);
         }
       }
-      //console.log(JSON.stringify(this.allMonth))
-
     }
   }
 
@@ -234,6 +255,8 @@ export default {
 			flex-direction:row;
 			flex-wrap:wrap;
 			li{
+
+
 				width: 14%;
 				margin-top: 10px;
 				height:38px;
@@ -261,7 +284,18 @@ export default {
 					span.date-elem{
 						color:red;
 					}
+          &.isdisable{
+            span{
+              color:#c3c3c3;
+            }
+          }
 				}
+        &.isdisable{
+  			  div{
+  			    color:#c3c3c3;
+
+  			  }
+  			}
 
 				&.holiday{/*假期*/
 					color:red;
@@ -292,10 +326,17 @@ export default {
 				}
 				&.active{
 
+				  & + li.active{
+				    div{
+				      border-radius: 0 5px 5px 0;
+				    }
+				  }
+
 					div{
 						height: 100%;
 						width: 100%;
 						background-color: #09bb07;
+            border-radius: 5px 0px 0px 5px;
 						overflow: hidden;
 						span.active{
 							width:100%;

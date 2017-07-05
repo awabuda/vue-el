@@ -36,7 +36,7 @@
             </p>
           </li>
         </ul>
-        <router-link :to="{path:'/list',name:'list',query:parmas}" class="search_btn" tag='div'>
+        <router-link :to="{path:'/list',name:'list',query:params}" class="search_btn" tag='div'>
            查找酒店
         </router-link>
       </div>
@@ -45,7 +45,7 @@
         <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' ></star>
       </transition>
       <keyword v-if='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn'></keyword>
-      <calendar v-if='isShowCalendar' @calSelect="calSelected"></calendar>
+      <calendar v-if='isShowCalendar' @calSelect="calSelected" :indate='params.indate' :outdate="params.outdate"></calendar>
     </div>
 
 </template>
@@ -88,7 +88,7 @@ export  default {
       kwSelect:{
         nameCn:""
       },
-      parmas:{
+      params:{
         indate:new Date().format('yyyy-MM-dd'),
         outdate:new Date().add(1,3).format('yyyy-MM-dd'),
         starlevels:"",
@@ -111,19 +111,20 @@ export  default {
   watch:{
     'priceParams': function ( nl,  ol){
       if ( ol != nl ){
-        this.parmas.lowprice  = nl.price.lowprice;
-        this.parmas.highprice = nl.price.highprice;
-        this.parmas.starlevels = nl.starlevels.join(',')
+        this.params.lowprice  = nl.price.lowprice;
+        this.params.highprice = nl.price.highprice;
+        this.params.starlevels = nl.starlevels.join(',')
       }
     },
-    'parmas.indate':function ( nl, ol ) {
+    'params.indate':function ( nl, ol ) {
       if ( nl != ol ) {
         this.indate  = new Date(nl).format('MM月dd日')
       }
     },
-    'parmas.outdate': function ( nl, ol){
+    'params.outdate': function ( nl, ol){
       if ( nl != ol ) {
         this.outdate  = new Date(nl).format('MM月dd日')
+        this.total = new Date(this.params.outdate).diff(new Date(this.params.indate),3);
       }
     },
     'cityId':function ( nl,ol ){
@@ -131,7 +132,7 @@ export  default {
           for(var i in this.kwSelect ) {
             this.kwSelect[i] = '';
           }
-          this.parmas.city = nl;
+          this.params.city = nl;
           this.getkeyword();
         }
     }
@@ -139,8 +140,8 @@ export  default {
   methods: { //虚拟dom中绑定的方法
     calSelected(ind,outd){
       if ( ind && outd ) {
-        this.parmas.indate = new Date(ind).format('yyyy-MM-dd');
-        this.parmas.outdate = new Date(outd).format('yyyy-MM-dd')
+        this.params.indate = new Date(ind).format('yyyy-MM-dd');
+        this.params.outdate = new Date(outd).format('yyyy-MM-dd')
       }
     },
     keySelect(item){
