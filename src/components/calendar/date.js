@@ -1,0 +1,79 @@
+Date.MSINSECOND = 1e3;
+Date.MSINMINUTE = 6e4;
+Date.MSINHOUR = 36e5;
+Date.MSINDAY = 864e5;
+Date.prototype.toArray =  function () {
+  return [this.getFullYear(), this.getMonth(), this.getDate(), this.getHours(), this.getMinutes(), this.getSeconds(), this.getMilliseconds()];
+};
+Date.prototype.getStartDate =  function () {
+
+  return  new Date(this.getFullYear(),this.getMonth(),1);
+};
+Date.prototype.format = function (fmt) {
+  fmt = fmt || "yyyy-MM-dd";
+  var  o = {
+      "M+": this.getMonth() + 1,//月份
+      "d+": this.getDate(), //日
+      "h+": this.getHours(), // 小时
+      "m+": this.getMinutes(), // 分
+      "s+": this.getSeconds(), //秒
+      "q+": Math.floor((this.getMonth()+3)/ 3), // 季度
+      "S": this.getMilliseconds() // 毫秒
+    };
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+  for (var k in o) {
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+  }
+  return fmt;
+};
+
+Date.prototype.isLeapYear =  function () {
+  var y = this.getFullYear();
+  return (0 === y % 4 && ((y % 100 !== 0) || (y % 400 === 0)));
+};
+
+Date.prototype.daysInMonth = function () {
+  return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][this.getMonth()] || (this.isLeapYear() ? 29 : 28);
+};
+
+Date.prototype.dayOfYear = function () {
+  return Math.ceil((this.getTime() - new Date(this.getFullYear(), 0, 1).getTime()) / Date.MSINDAY);
+};
+//返回添加相应时间后的时间(默认不指定part=7则按毫秒为单位)
+//part:1-年，2-月，3-日，4-时，5-分，6-秒，7-毫(默认)
+Date.prototype.add = function (v, part) {
+  if (part == 1 || part == 2) {
+					var r = new Date(this);
+					if (part == 1) r.setYear(r.getFullYear() + v);
+					else r.setMonth(r.getMonth() + v);
+					return r;
+	} else return new Date(this.getTime() + [1, 0, 0, Date.MSINDAY, Date.MSINHOUR, Date.MSINMINUTE, Date.MSINSECOND, 1][part || 7] * v);
+};
+//返回日期的部分，默认年月日，可以通过part参数指定精度
+//part:1-年，2-月，3-日(默认)，4-时，5-分，6-秒，7-毫
+Date.prototype.date = function  (part){
+  var t = this.toArray();
+		for (var i = part || 3; i < 7; i++) t[i] = i == 2 ? 1 : 0;
+		return new Date(t[0], t[1], t[2], t[3], t[4], t[5], t[6]);
+};
+//判断两个时间是否相等，可以通过part参数指定判断的精度
+//part:1-年，2-月，3-日，4-时，5-分，6-秒，7-毫(默认)
+Date.prototype.equal = function (date, part) {
+
+  if (typeof this != typeof date) return false;
+	var t = this.toArray();
+	date = date.toArray();
+	for (var i = 0; i < (part || 7); i++)
+		if (t[i] != date[i]) return false;
+	return true;
+};
+//计算两个日期的间隔，可以通过part参数指定哪部分
+//part:1-年，2-月，3-日，4-时，5-分，6-秒，7-毫(默认)
+Date.prototype.diff = function (date, part) {
+  if (part == 1 || part == 2) {
+		var r = this.getFullYear() - date.getFullYear();
+		return part == 2 ? (r * 12 + this.getMonth() - date.getMonth()) : r;
+	}
+	part = [1, 0, 0, Date.MSINDAY, Date.MSINHOUR, Date.MSINMINUTE, Date.MSINSECOND, 1][part || 7];
+	return this.getTime() / part - date.getTime() / part;
+}

@@ -44,6 +44,7 @@
 </template>
 <script>
 import festifval from './festival.js'
+require('./date.js')
 export default {
   // props indate outdate isdouble mindate maxdate
   props:['indate','outdate','ef'],
@@ -107,7 +108,7 @@ export default {
           } else {
             // 清空属性带过来的start
             if ( this.selectValue.indate.text && this.selectValue.outdate.text ) {
-              //去除日期中间的淡化
+              //去除日期中间的淡化 start
               this.allMonth.forEach(function (value) {
                 value.all.forEach(function (item){
 
@@ -116,6 +117,7 @@ export default {
                   }
                 })
               })
+              //去除日期中间的淡化 end
               this.allMonth[this.selectValue.indate.key].all[this.selectValue.indate.index].checked = false;
               this.allMonth[this.selectValue.outdate.key].all[this.selectValue.outdate.index].checked = false;
               this.selectValue.indate.text ="";
@@ -149,13 +151,15 @@ export default {
             }
 
             if ( this.selectValue.indate.text && this.selectValue.outdate.text ) {
+              // 入离店日期之间飘淡 start;
               this.allMonth.forEach(function (month) {
                 month.all.forEach(function (item) {
                   if (new Date(item.date).diff(new Date(_this.selectValue.indate.text),3)>0 && new Date(item.date).diff(new Date(_this.selectValue.outdate.text),3)<0 && item.isdisable){
                     item.activeduring = true;
                   }
                 })
-              })
+              });
+              // 入离店日期之间飘淡 end;
               this.$emit('calSelect',this.selectValue.indate.text,this.selectValue.outdate.text);
               setTimeout(function () {
                 history.back();

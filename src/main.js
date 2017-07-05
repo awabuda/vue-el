@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
-require('./date.js')
+require('./assets/js/date.js')
 //import store from './components/store/store'
 
 
