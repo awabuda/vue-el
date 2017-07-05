@@ -17,7 +17,6 @@
         <div class="keyword-list">
           <ul>
             <li v-for="(value,key) in item.subFilterInfoEntities" keyword-id="" city-id="0201" filter-type="" iskeyword="" name-cn="如家" lat="" lng="" hotelname="" placename="" type-id="3" hotel-brand-id="n167033088745261_7468709921099261_32" brandname="如家" :class="{'hide': value.show,on:value.nameCn==name}" @click='keySelect(value)'><span v-text='value.nameCn'></span></li>
-
             <li v-for='(value,key) in item.subFilterInfoEntities' :class='[value.flag && key ==4 ? "icon-bottom" : "icon-top"]' v-if="key==4" @click='showHide(index,key)'></li>
           </ul>
         </div>

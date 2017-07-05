@@ -101,23 +101,42 @@ export default {
       if ( this.allMonth[key].all[index].isdisable ) {
           this.allMonth[key].all[index].checked = !this.allMonth[key].all[index].checked;
 
-           if ( !this.doubleClick ){
+          if ( !this.doubleClick ){
             this.$emit('calSelect',this.allMonth[key].all[index].date);
             history.back()
           } else {
-            if ( this.selectValue.indate.text == this.allMonth[key].all[index].date ){
+            // 清空属性带过来的start
+            if ( this.selectValue.indate.text && this.selectValue.outdate.text ) {
+              //去除日期中间的淡化
+              this.allMonth.forEach(function (value) {
+                value.all.forEach(function (item){
+
+                  if (new Date(item.date).diff(new Date(_this.selectValue.indate.text),3)>0 && new Date(item.date).diff(new Date(_this.selectValue.outdate.text),3) < 0 ){
+                    item.activeduring = false;
+                  }
+                })
+              })
+              this.allMonth[this.selectValue.indate.key].all[this.selectValue.indate.index].checked = false;
+              this.allMonth[this.selectValue.outdate.key].all[this.selectValue.outdate.index].checked = false;
+              this.selectValue.indate.text ="";
+              this.selectValue.outdate.text = "";
+            }
+            // 清空属性带过来的end
+            // 选择相同的 日期 进行清空 start
+            if ( this.selectValue.indate.text == this.allMonth[key].all[index].date ) {
               this.selectValue.indate.text = "";
               this.selectValue.indate.key  = "";
               this.selectValue.indate.index = "";
-
               return false;
             }
-            if ( this.selectValue.indate.text == '' ) {
+            // 选择相同的 日期 进行清空 start
 
+            if ( this.selectValue.indate.text == '' ) {
               this.selectValue.indate.text = this.allMonth[key].all[index].date;
               this.selectValue.indate.key  = key;
               this.selectValue.indate.index = index;
-            } else if ( new Date(this.selectValue.indate.text).getTime() > new Date(this.allMonth[key].all[index].date).getTime() ){
+              this.allMonth[key].all[index].checked = true;
+            } else if ( new Date(this.selectValue.indate.text).getTime() > new  Date(this.allMonth[key].all[index].date).getTime() ){
 
               this.allMonth[this.selectValue.indate.key ].all[this.selectValue.indate.index].checked = false;
               this.selectValue.indate.text = this.allMonth[key].all[index].date;
@@ -132,13 +151,11 @@ export default {
             if ( this.selectValue.indate.text && this.selectValue.outdate.text ) {
               this.allMonth.forEach(function (month) {
                 month.all.forEach(function (item) {
-                  if (new Date(item.date).diff(new Date(_this.selectValue.indate.text),3)>0 && new Date(item.date).diff(new Date(_this.selectValue.outdate.text),3)<0 ){
+                  if (new Date(item.date).diff(new Date(_this.selectValue.indate.text),3)>0 && new Date(item.date).diff(new Date(_this.selectValue.outdate.text),3)<0 && item.isdisable){
                     item.activeduring = true;
                   }
                 })
               })
-
-
               this.$emit('calSelect',this.selectValue.indate.text,this.selectValue.outdate.text);
               setTimeout(function () {
                 history.back();
@@ -173,9 +190,20 @@ export default {
             }
             cpt.checked = false; // 点中态；
             cpt.date = new Date (d.firstDate).add(j-d.firDay,3).format('yyyy-MM-dd');
-            // if ( cpt.date == this.indate || cpt.date == this.outdate ){
-            //   cpt.checked = true;
-            // }
+            // 已经选中的 start
+            if ( cpt.date == this.indate && cpt.cpt.isdisable){
+              cpt.checked = true;
+              this.selectValue.indate.text = this.indate;
+              this.selectValue.indate.key = i;
+              this.selectValue.indate.index = j;
+            }
+            if ( cpt.date == this.outdate && cpt.cpt.isdisable){
+              cpt.checked = true;
+              this.selectValue.outdate.text = this.outdate;
+              this.selectValue.outdate.key = i;
+              this.selectValue.outdate.index = j;
+            }
+            // 已经选中 end
             cpt.dateCN = new Date(cpt.date).format('MM-dd');
             cpt.activeduring = false;
             d.all.push(cpt);
@@ -198,9 +226,7 @@ export default {
             };
             cpt.checked = false; // 点中态；
             cpt.date = new Date (s.firstDate).add((j-s.firDay),3).format('yyyy-MM-dd');
-            // if ( cpt.date == this.indate || cpt.date == this.outdate ){
-            //   cpt.checked = true;
-            // }
+
             cpt.dateCN = new Date(cpt.date).format('MM-dd');
             cpt.activeduring = false;
             if ( j >= s.firDay ) {
@@ -210,6 +236,21 @@ export default {
             }
             if (new Date(cpt.date).diff(new Date(this.today),3) < 0) {
                cpt.isdisable = false;
+            }
+            if ( cpt.date == this.indate && cpt.isdisable){
+              cpt.checked = true;
+              this.selectValue.indate.text = this.indate;
+              this.selectValue.indate.key = i;
+              this.selectValue.indate.index = j;
+            }
+            if ( cpt.date == this.outdate && cpt.isdisable){
+              cpt.checked = true;
+              this.selectValue.outdate.text = this.outdate;
+              this.selectValue.outdate.key = i;
+              this.selectValue.outdate.index = j;
+            }
+            if (new Date(cpt.date).diff(new Date(this.indate),3)>0 && new Date(cpt.date).diff(new Date(this.outdate),3)<0 && cpt.isdisable){
+              cpt.activeduring = true
             }
             s.all.push(cpt);
           }
