@@ -5,7 +5,7 @@
         <ul>
           <li class="city">
             <p class="cityname" @click='globalcity=!globalcity' :city-id="cityId">{{cityName}}</p>
-            <span>
+            <span @click="getLocation">
               <i></i>
               我的位置
             </span>
@@ -56,6 +56,8 @@ import globalCity from '../components/globalCity'
 import star from '../components/star'
 import keyword from '../components/keyword'
 import calendar from '../components/calendar/calendar.vue'
+import Geo from '../assets/js/glocaltion.js'
+
 export  default {
   data() {
     return {
@@ -138,10 +140,14 @@ export  default {
     }
   },
   methods: { //虚拟dom中绑定的方法
+    getLocation() {
+      console.log('定位功能开始')
+      Geo.getH5Location();
+    },
     calSelected(ind,outd){
       if ( ind && outd ) {
         this.params.indate = new Date(ind).format('yyyy-MM-dd');
-        this.params.outdate = new Date(outd).format('yyyy-MM-dd')
+        this.params.outdate = new Date(outd).format('yyyy-MM-dd');
       }
     },
     keySelect(item){
@@ -228,10 +234,7 @@ export  default {
         _this.isShowCalendar = false;
       }
     }
-    var pl = _this.getHash('!_X!VUE');
-    if ( pl ) {
-      _this[pl] = true;
-    }
+
   },
   beforeUpdate () {// 组件更新之前
   },
