@@ -17,7 +17,7 @@
               <span class="date-elem" v-text="day-s.firDay > 0 ? day-s.firDay : ''"></span>
               <b v-text="festival.holidaytag[s.all[index].date]" class='holiday'></b>
             </div>
-            <div class="" v-else-if="!festival.holidaytag[s.all[index].date] && (festival.cnfestivaltag[s.all[index].date] && festival.festivaltag[s.all[index].dateCN])">
+            <div class="" v-else-if="!festival.holidaytag[s.all[index].date] && (festival.cnfestivaltag[s.all[index].date] || festival.festivaltag[s.all[index].dateCN]) && index >=s.firDay">
               <span class='festival' v-text="day-s.firDay > 0 ? day-s.firDay : ''"></span>
               <span class="festivalText">{{festival.cnfestivaltag[s.all[index].date] ||festival.festivaltag[s.all[index].dateCN]}}</span>
             </div>
@@ -51,7 +51,7 @@ export default {
   data: function data() {
     return {
       mindate:new Date().format('yyyy-MM-dd'),
-      maxdate:new Date().add(5,2).format('yyyy-MM-dd'),
+      maxdate:new Date().add(6,2).format('yyyy-MM-dd'),
       allMonth:[],
       startText:'入住',
       endText:"离店",
@@ -284,7 +284,8 @@ export default {
 	height:100%;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
-	margin-top:48px;
+  box-sizing: border-box;
+  padding-top: 48px;
 	.cld_item{
 		width:100%;
 		.title_date{

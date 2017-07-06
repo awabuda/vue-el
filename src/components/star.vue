@@ -1,5 +1,5 @@
 <template>
-<div id="star" @click.self.stop='maskdie'>
+<div id="star" >
   <div class="filter-sp " style="">
     <div class="sp-content">
       <div class="star">
@@ -27,6 +27,10 @@
       </ul>
     </div>
     <!--e-->
+
+  </div>
+  <div class="mask-layer" @click.self.stop='maskdie'>
+
   </div>
 </div>
 </template>
@@ -179,9 +183,18 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 99;
-    background: #000;
-    opacity: 0.7;
+    z-index: 80;
+
+    .mask-layer{
+      position: absolute;
+      top:0;
+      left:0;
+      background: #000;
+      z-index:81;
+      width: 100%;
+      height:100%;
+      opacity: 0.7;
+    }
     .filter-sp {
         color: #555;
         background-color: #FFF;
