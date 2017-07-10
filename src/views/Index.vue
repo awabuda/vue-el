@@ -44,8 +44,8 @@
       <transition name="fade" mode="out-in" appear>
         <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' ></star>
       </transition>
-      <keyword v-if='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn'></keyword>
-      <calendar v-if='isShowCalendar' @calSelect="calSelected" :indate='params.indate' :outdate="params.outdate"></calendar>
+      <keyword v-show='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn' :isShowKeyWord='isShowKeyWord'></keyword>
+      <calendar v-show='isShowCalendar' @calSelect="calSelected" :indate='params.indate' :outdate="params.outdate" :isShowCalendar='isShowCalendar'></calendar>
 
       <ul class="prolist first s_bdb">
         <li><a href="#" class="isnearby tjclick" ><i class="near isnearby"></i>附近酒店</a></li>

@@ -1,5 +1,5 @@
-<template>
-  <div id='calander'>
+<template >
+  <div id='calander' v-show='isShowCalendar'>
     <div class="calander_wrap">
       <section class='cld_item' v-for='(s,key) in allMonth'>
         <h3 class="title_date">{{s.month}}</h3>
@@ -47,7 +47,7 @@ import festifval from './festival.js'
 require('./date.js')
 export default {
   // props indate outdate isdouble mindate maxdate
-  props:['indate','outdate','ef'],
+  props:['indate','outdate','isShowCalendar'],
   data: function data() {
     return {
       mindate:new Date().format('yyyy-MM-dd'),
@@ -75,8 +75,15 @@ export default {
     }
   },
   name: "calendar",
+  watch:{
+    'isShowCalendar': function (nl,ol) {
+      if ( !!this.$props.isShowCalendar ){
+        location.hash='!_X!VUE=isShowCalendar';
+      }
+    }
+  },
   mounted: function mounted() {
-    location.hash='!_X!VUE=isShowCalendar';
+    //location.hash='!_X!VUE=isShowCalendar';
   //  this.getFestival();
     //console.log(this.festival)
     this.getDiffMoth(this.mindate,this.maxdate);

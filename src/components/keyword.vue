@@ -1,6 +1,8 @@
 <template>
-<div id="keyword">
+<div id="keyword" v-show='isShowKeyWord'>
+  <keywordSug></keywordSug>
     <div class="page-select page-content" @click.stop.self="back">
+
       <div class="current-city">
         <div class="get-city"><i class="icon-nearby"></i>查看我附近的酒店<b></b></div>
       </div>
@@ -26,8 +28,12 @@
 </template>
 <script>
 import storage from './storage/storage'
+import keywordSug from './sug'
 export default {
-  props: ['city','keyword','name'],
+  components: {
+    keywordSug
+  },
+  props: ['city','keyword','name','isShowKeyWord'],
   name: "",
   data() {
     return {
@@ -38,10 +44,16 @@ export default {
     }
   },
   mounted() {
-    location.hash="!_X!VUE=isShowKeyWord"
-    this.cloneKeyWord();
+
+
   },
   watch:{
+    "isShowKeyWord": function ( nl, ol ) {
+      if ( this.$props.isShowKeyWord ) {
+        location.hash="!_X!VUE=isShowKeyWord";
+        this.cloneKeyWord();
+      }
+    }
   },
   methods: {
     keySelect(item) {
@@ -99,11 +111,10 @@ export default {
     left:0;
     overflow: hidden;
     z-index: 99;
-    background-color: #ffffff;
+    background-color: #F2F2F2;
     .page-select{
       background: #F2F2F2;
-      padding: 50px 12px 12px 12px;
-      padding-top: 44px;
+      padding: 0px 12px 12px 12px;
       overflow: auto !important;
       -webkit-overflow-scrolling: touch;
       height: 100%;
