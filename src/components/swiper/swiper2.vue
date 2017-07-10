@@ -1,5 +1,5 @@
 <template>
-    <swiper :options="swiperoption">
+    <swiper :options="swiperoption"  >
       <swiper-slide v-for="item in bannerdata" :key="item.id">
         <img :src="item.picUrl" >
       </swiper-slide>
@@ -17,6 +17,7 @@ export default {
      swiper, swiperSlide
   },
   methods: { //虚拟dom中绑定的方法
+
 
   }
   ,

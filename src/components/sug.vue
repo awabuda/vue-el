@@ -1,11 +1,12 @@
 <template>
   <div id="sug">
     <div class="">
-      <i></i><input type="text" name="" v-model="inputValue">
+      <i></i><input type="text" name="" v-model.trim="inputValue" >
     </div>
 
   </div>
 </template>
+<!-- v-model 中lazy的修饰符在失去焦点的时候才会触发 -->
 <style lang="scss">
 #sug{
   margin-bottom: 3px;

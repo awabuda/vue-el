@@ -1,5 +1,5 @@
 <template >
-  <div class='global_city'>
+  <div class='global_city' v-show="globalcity">
     <div class="current">
       <div class="page-title">附近</div>
       <div class="city-list ">
@@ -47,22 +47,31 @@
 import storage from './storage/storage'
 
 export default  {
-  props:['historyCity',"cityId",'cityName'],
+  props:['historyCity',"cityId",'cityName',"globalcity"],
   data () {
       return {
         allCity:[{letter:"A",checked:false},{letter:"B",checked:false},{letter:"C",checked:false},{letter:"D",checked:false},{letter:"E",checked:false},{letter:"F",checked:false},{letter:"G",checked:false},{letter:"H",checked:false},{letter:"I",checked:false},{letter:"J",checked:false},{letter:"K",checked:false},{letter:"L",checked:false},{letter:"M",checked:false},{letter:"N",checked:false},{letter:"O",checked:false},{letter:"P",checked:false},{letter:"Q",checked:false},{letter:"R",checked:false},{letter:"S",checked:false},{letter:"T",checked:false},{letter:"U",checked:false},{letter:"V",checked:false},{letter:"W",checked:false},{letter:"X",checked:false},{letter:"Y",checked:false},{letter:"Z",checked:false}],
-        localCity: JSON.parse(storage.getLocal("historyCity")||'[]'),
-        hisShow:!!storage.getLocal("historyCity") ?  true: false,
+        localCity: [],
+        hisShow:false,
         allCityData:[],
         selectLetter:""
 
       }
   },
   mounted () {
-    location.hash = '!_X!VUE=globalcity'
+
   },
   activated(){
 
+  },
+  watch:{
+    "globalcity": function () {
+      if ( this.$props.globalcity ){
+        location.hash = '!_X!VUE=globalcity'
+        this.hisShow  = storage.getLocal('historyCity') ? true :false;
+        this.localCity = JSON.parse(storage.getLocal("historyCity")||'[]');
+      }
+    }
   },
   methods: {
     citySelect: function(e) {

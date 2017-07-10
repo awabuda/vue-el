@@ -1,5 +1,5 @@
 <template>
-<div id="star" >
+<div id="star">
   <div class="filter-sp " style="">
     <div class="sp-content">
       <div class="star">
@@ -36,7 +36,7 @@
 </template>
 <script>
 export default {
-  props: ['starlist'],
+  props: ['starlist','isShowStar'],
   name: "star",
   data () {
     return {
@@ -104,6 +104,13 @@ export default {
       ]
     }
   },
+  watch:{
+    'isShowStar': function (nl,ol) {
+      if ( this.$props.isShowStar ){
+
+      }
+    }
+  },
   mounted: function mounted() {
     //do something after mounting vue instance
     location.hash='!_X!VUE=isShowStar'
@@ -131,8 +138,11 @@ export default {
       }
     },
     priceSelect(e,index){
+
       if ( e.highprice || e.lowprice ) {
         this.selectData.price = e;
+      } else {
+        this.selectData.price = {};
       }
       for (var i=0; i< this.price.length; i++){
         this.price[i].checked = false;

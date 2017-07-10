@@ -40,12 +40,15 @@
            查找酒店
         </router-link>
       </div>
-      <globalCity v-if="globalcity" :historyCity='historyCity' @globalCb='citySelectCb' :cityId='cityId' :cityName='cityName'></globalCity>
-      <transition name="fade" mode="out-in" appear>
-        <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' ></star>
+      <globalCity v-show="globalcity" :historyCity='historyCity' @globalCb='citySelectCb' :cityId='cityId' :cityName='cityName' :globalcity="globalcity"></globalCity>
+      <transition name="slide-fade" >
+        <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' :isShowStar="isShowStar"></star>
       </transition>
+
       <keyword v-show='isShowKeyWord' :city='cityId' :keyword='keywordDate' @keyUp='keySelect' :name='kwSelect.nameCn' :isShowKeyWord='isShowKeyWord'></keyword>
-      <calendar v-show='isShowCalendar' @calSelect="calSelected" :indate='params.indate' :outdate="params.outdate" :isShowCalendar='isShowCalendar'></calendar>
+      <transition name="fade">
+        <calendar v-show='isShowCalendar' @calSelect="calSelected" :indate='params.indate' :outdate="params.outdate" :isShowCalendar='isShowCalendar'></calendar>
+      </transition>
 
       <ul class="prolist first s_bdb">
         <li><a href="#" class="isnearby tjclick" ><i class="near isnearby"></i>附近酒店</a></li>
@@ -70,6 +73,7 @@ import star from '../components/star'
 import keyword from '../components/keyword'
 import calendar from '../components/calendar/calendar.vue'
 import Geo from '../assets/js/glocaltion.js'
+import mySwiper from '../components/swiper/swiper2.vue'
 
 export  default {
   data() {
@@ -117,7 +121,7 @@ export  default {
     }
   },
   components:{
-    mySwiper: require('../components/swiper/swiper2.vue'),
+    mySwiper,
     globalCity,
     star,
     keyword,
@@ -154,7 +158,6 @@ export  default {
   },
   methods: { //虚拟dom中绑定的方法
     getLocation() {
-      console.log('定位功能开始')
       Geo.getH5Location();
     },
     calSelected(ind,outd){
@@ -199,12 +202,13 @@ export  default {
       //this.globalcity = false;
     },
     priceSelect(e){
+
       this.pricestar = ""; // 先清空
       if (e && e.price.highprice && e.price.lowprice){
         this.pricestar +='$'+ e.price.lowprice + '-'+e.price.highprice+'，'
       } else if (e && !e.price.highprice && e.price.lowprice){
         this.pricestar +='$'+ e.price.lowprice + '以上，'
-      } else if (e && !e.price.highprice && !e.price.lowprice &&e.starlevels.length > 0 ){
+      } else if (e && !e.price.highprice && !e.price.lowprice && e.starlevels.length > 0 ){
         this.pricestar+='价格不限，'
       };
       if ( e && e.starlevels && e.starlevels.length == 0 && (e.price.highprice || e.price.lowprice)) {
@@ -264,6 +268,24 @@ export  default {
 }
 </script>
 <style media="screen" lang='scss'>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);;
+}
+
+.slide-fade-enter,.slide-fade-leave-to
+/* .slide-fade-leave-active for <2.1.8 */ {
+  transform: translateX(100%);
+  opacity: 0;
+}
 #index{
   height:100%;
 }
