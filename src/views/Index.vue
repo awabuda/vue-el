@@ -41,7 +41,7 @@
         </router-link>
       </div>
       <globalCity v-show="globalcity" :historyCity='historyCity' @globalCb='citySelectCb' :cityId='cityId' :cityName='cityName' :globalcity="globalcity"></globalCity>
-      <transition name="slide-fade" >
+      <transition name="slide-fade">
         <star v-if="isShowStar" :starlist='starList' @starCb='priceSelect' :isShowStar="isShowStar"></star>
       </transition>
 
