@@ -28,13 +28,13 @@
     <div class="all-city" >
       <div class="lc-city-lst">
         <ul>
-          <li class="" v-for='all in allCity' @click="allCitySelect(all)">
+          <li class="" v-for='(all,index) in allCity' @click="allCitySelect(all,index)">
             <div class="lc-letter-tit">
               <span> {{all.letter}}<i  v-bind:class="{active:!all.checked}"></i>
               </span>
             </div>
             <div class="lc-show-hide" v-show='all.checked'>
-               <span v-for='item in allCityData' :city-id="item.cityId" :area-type="item.areaType" :area-id="item.areaId" v-text="item.cityName" @click="citySelect(item)"></span>
+               <span v-for='(item,index) in all.content' :city-id="item.cityId" :area-type="item.areaType" :area-id="item.areaId" v-text="item.cityName" @click="citySelect(item)"></span>
             </div>
           </li>
         </ul>
@@ -50,7 +50,7 @@ export default  {
   props:['historyCity',"cityId",'cityName',"globalcity"],
   data () {
       return {
-        allCity:[{letter:"A",checked:false},{letter:"B",checked:false},{letter:"C",checked:false},{letter:"D",checked:false},{letter:"E",checked:false},{letter:"F",checked:false},{letter:"G",checked:false},{letter:"H",checked:false},{letter:"I",checked:false},{letter:"J",checked:false},{letter:"K",checked:false},{letter:"L",checked:false},{letter:"M",checked:false},{letter:"N",checked:false},{letter:"O",checked:false},{letter:"P",checked:false},{letter:"Q",checked:false},{letter:"R",checked:false},{letter:"S",checked:false},{letter:"T",checked:false},{letter:"U",checked:false},{letter:"V",checked:false},{letter:"W",checked:false},{letter:"X",checked:false},{letter:"Y",checked:false},{letter:"Z",checked:false}],
+        allCity:[{letter:"A",checked:false,content:[]},{letter:"B",checked:false,content:[]},{letter:"C",checked:false,content:[]},{letter:"D",checked:false,content:[]},{letter:"E",checked:false,content:[]},{letter:"F",checked:false,content:[]},{letter:"G",checked:false,content:[]},{letter:"H",checked:false,content:[]},{letter:"I",checked:false,content:[]},{letter:"J",checked:false,content:[]},{letter:"K",checked:false,content:[]},{letter:"L",checked:false,content:[]},{letter:"M",checked:false,content:[]},{letter:"N",checked:false,content:[]},{letter:"O",checked:false,content:[]},{letter:"P",checked:false,content:[]},{letter:"Q",checked:false,content:[]},{letter:"R",checked:false,content:[]},{letter:"S",checked:false,content:[]},{letter:"T",checked:false,content:[]},{letter:"U",checked:false,content:[]},{letter:"V",checked:false,content:[]},{letter:"W",checked:false,content:[]},{letter:"X",checked:false,content:[]},{letter:"Y",checked:false,content:[]},{letter:"Z",checked:false,content:[]}],
         localCity: [],
         hisShow:false,
         allCityData:[],
@@ -92,22 +92,28 @@ export default  {
       this.hisShow = false;
     }
     ,
-    allCitySelect: function (all) {
-        this.allCityData = [];
-        this.$http.get('https://m.elong.com/hotelwxqb/api/gethotelcitysbyletter/',{
-          params:{ letter:all.letter,_rt: new Date().getTime()}
-        }).then(function (res) {
+    allCitySelect: function (all,index) {
+        if ( this.allCity[index].content.length > 0 ){
           for ( var i= 0;i < this.allCity.length ;i++ ){
-            if (this.allCity[i].letter == all.letter){
-                this.allCity[i].checked = !this.allCity[i].checked;
-            } else {
+            if (i != index) this.allCity[i].checked = false;
+          }
+          this.allCity[index].checked = !this.allCity[index].checked;
+        }else{
+          this.$http.get('https://m.elong.com/hotelwxqb/api/gethotelcitysbyletter/',{
+            params:{ letter:all.letter,_rt: new Date().getTime()}
+          }).then(function (res) {
+            //先去渲染再去展示
+            this.allCity[index].content = res.body;
+            for ( var i= 0;i < this.allCity.length ;i++ ){
               this.allCity[i].checked = false;
             }
-          }
-          this.allCityData = res.body;
-        },function () {
-          console.log('请求失败')
-        })
+            this.allCity[index].checked = !this.allCity[index].checked;
+
+          },function () {
+            console.log('请求失败')
+          })
+        }
+
       }
     }
   }

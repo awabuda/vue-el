@@ -14,13 +14,13 @@
             <dl class="in">
               <dt> 入住</dt>
               <dd data-value="" class="d1">{{indate}}</dd>
-              <dd class="d2"> 今天 </dd>
+              <dd class="d2"> {{indateText}} </dd>
             </dl>
             <div class="total"><span><em>{{total}}</em>晚</span></div>
             <dl class="out " >
               <dt> 离店</dt>
               <dd data-value="" class="d1">{{outdate}}</dd>
-              <dd class="d2"> 明天</dd>
+              <dd class="d2"> {{outdateText}}</dd>
             </dl>
           </li>
           <li class='keywords'>
@@ -82,6 +82,8 @@ export  default {
       cityId:"0101",
       indate: new Date().format('MM月dd日'),
       outdate: new Date().add(1,3).format('MM月dd日'),
+      indateText:'今天',
+      outdateText:'明天',
       bannerpic: JSON.parse(storage.getLocal('banner') || '[]'),
       total:1,
       swiperOption: {
@@ -97,6 +99,7 @@ export  default {
       starList:[],
       priceParams:{},
       pricestar:'',
+      week:['周日','周一','周二','周三','周四','周五','周六'],
       starlevels:{
         12:'舒适型',
         3:'三星/经济型',
@@ -138,12 +141,24 @@ export  default {
     'params.indate':function ( nl, ol ) {
       if ( nl != ol ) {
         this.indate  = new Date(nl).format('MM月dd日')
+        if (new Date('nl').format('yyyy-MM-dd') == new Date().format('yyyy-MM-dd')){
+          this.indateText = "今天";
+        } else if ( new Date(nl).format('yyyy-MM-dd') == new Date().add(1,3).format('yyyy-MM-dd') ) {
+          this.indateText  = "明天";
+        } else {
+          this.indateText = this.week[new Date(nl).getDay()]
+        }
       }
     },
     'params.outdate': function ( nl, ol){
       if ( nl != ol ) {
         this.outdate  = new Date(nl).format('MM月dd日')
         this.total = new Date(this.params.outdate).diff(new Date(this.params.indate),3);
+        if ( new Date(nl).format('yyyy-MM-dd') == new Date().add(1,3).format('yyyy-MM-dd') ) {
+          this.outdateText  = "明天";
+        } else {
+          this.outdateText = this.week[new Date(nl).getDay()]
+        }
       }
     },
     'cityId':function ( nl,ol ){
