@@ -185,7 +185,7 @@ export  default {
       this.kwSelect = item;
     },
     getkeyword(){
-      this.$http.get('https://m.elong.com/hotelwxqb/api/gethotelsearchrecommendplace/',{params:{city:this.cityId}
+      this.$http.get('http://yapi.5zreo.cn/mock/24/test/place',{params:{city:this.cityId}
     }).then(function (res) {
       this.keywordDate = JSON.parse(res.body.simpleFilterInfos);
     })
@@ -204,7 +204,7 @@ export  default {
     },
     getGlobalCity() {
       var _this = this;
-      this.$http.get('https://m.elong.com/hotelwxqb/api/getwxqbdata/?_rt=1498381496634&cityid=0101').then(function(res) {
+      this.$http.get('http://yapi.5zreo.cn/mock/24/test/miandata').then(function(res) {
           this.historyCity  = JSON.parse(res.body.hotCityList || "[{}]") ;
           this.starList = JSON.parse(res.body.starList|| '[{}]')
       })

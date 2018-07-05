@@ -8,6 +8,7 @@
 </template>
 <script>
 // 个人感觉这个方法不错
+
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 
 
@@ -45,3 +46,15 @@ export default {
 }
 
 </script>
+<style media="screen" lang='scss'>
+.swiper-wrapper{
+height:200px;
+}
+.swiper-slide{
+  height:200px;
+}
+img{
+  width:100%;
+  height:200px;
+}
+</style>

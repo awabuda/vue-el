@@ -7,7 +7,6 @@
   </div>
 </template>
 <script>
-require('../../node_modules/swiper/dist/css/swiper.min.css')
 var Swiper = require('swiper');
 export default {
   data () {
